@@ -6,16 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StoreResponseDto {
-    private String id;
-    private String email;
-    private String name;
-    private String phone;
-    private String image;
-    private String wifiPass;
-    private Integer templateId;
-    private String address;
-    private Integer wardId;
-    private Integer districtId;
-    private Integer cityId;
-    private Integer storeTypeId;
+
 }
