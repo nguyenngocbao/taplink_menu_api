@@ -30,10 +30,16 @@ public class StoreController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createStore(@RequestPart("store") String storeJson, @RequestPart("image") MultipartFile image) {
         StoreResponseDto storeResponseDto = storeService.createStore(storeJson, image);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") String storeJson, @RequestPart("image") MultipartFile image) {
+        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeJson, image);
+        return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
     }
 
     @GetMapping("/{storeId}")

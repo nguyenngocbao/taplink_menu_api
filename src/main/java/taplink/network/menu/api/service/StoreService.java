@@ -9,4 +9,5 @@ public interface StoreService {
     ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir);
     StoreResponseDto createStore(String storeJson, MultipartFile image);
     StoreResponseDto findById(Long id);
+    StoreResponseDto updateStore(Long id, String storeJson, MultipartFile image);
 }

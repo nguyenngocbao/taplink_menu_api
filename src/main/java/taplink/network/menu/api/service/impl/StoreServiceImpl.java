@@ -1,5 +1,6 @@
 package taplink.network.menu.api.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,7 +19,6 @@ import taplink.network.menu.api.model.Store;
 import taplink.network.menu.api.repository.StoreRepository;
 import taplink.network.menu.api.service.StoreService;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -49,7 +49,7 @@ public class StoreServiceImpl implements StoreService {
             Store store = objectMapperUtils.convertEntityAndDto(storeRequestDto, Store.class);
             Store savedStore = storeRepository.save(store);
             return objectMapperUtils.convertEntityAndDto(savedStore, StoreResponseDto.class);
-        } catch (IOException ex) {
+        } catch (JsonProcessingException ex) {
             logger.error("Getting exception while reading storeJson", ex);
             throw new RuntimeException(ex);
         }
@@ -57,9 +57,27 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreResponseDto findById(Long id) {
-        Store store = storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store not found for id: " + id));
+        Store store = getStore(id);
         return objectMapperUtils.convertEntityAndDto(store, StoreResponseDto.class);
     }
 
+    @Override
+    public StoreResponseDto updateStore(Long id, String storeJson, MultipartFile image) {
+        Store store = getStore(id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            StoreRequestDto storeRequestDto = objectMapper.readValue(storeJson, StoreRequestDto.class);
+            objectMapperUtils.mapToEntityFromDto(storeRequestDto, store);
+            Store updatedStore = storeRepository.save(store);
+            return objectMapperUtils.convertEntityAndDto(updatedStore, StoreResponseDto.class);
+        } catch (JsonProcessingException ex) {
+            logger.error("Getting exception while reading storeJson", ex);
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private Store getStore(Long id) {
+        return storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", id));
+    }
 
 }

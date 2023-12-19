@@ -18,6 +18,10 @@ public class ObjectMapperUtils {
         return mapper.map(entity, outputClass);
     }
 
+    public <E, D> void mapToEntityFromDto(final E entity, final D dto){
+        mapper.map(dto, entity);
+    }
+
     public <C,E> List<C> mapAll(final Collection<? extends E> input, final Class<C> outputClass){
         return input.stream().map(
                 entity -> convertEntityAndDto(entity, outputClass)
