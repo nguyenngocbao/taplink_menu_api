@@ -1,7 +1,5 @@
 package taplink.network.menu.api.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +40,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResponseDto createStore(String storeJson, MultipartFile image) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            StoreRequestDto storeRequestDto = objectMapper.readValue(storeJson, StoreRequestDto.class);
-            Store store = objectMapperUtils.convertEntityAndDto(storeRequestDto, Store.class);
-            Store savedStore = storeRepository.save(store);
-            return objectMapperUtils.convertEntityAndDto(savedStore, StoreResponseDto.class);
-        } catch (JsonProcessingException ex) {
-            logger.error("Getting exception while reading storeJson", ex);
-            throw new RuntimeException(ex);
-        }
+    public StoreResponseDto createStore(StoreRequestDto storeRequestDto, MultipartFile image) {
+        Store store = objectMapperUtils.convertEntityAndDto(storeRequestDto, Store.class);
+        Store savedStore = storeRepository.save(store);
+        return objectMapperUtils.convertEntityAndDto(savedStore, StoreResponseDto.class);
     }
 
     @Override
@@ -62,18 +53,11 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResponseDto updateStore(Long id, String storeJson, MultipartFile image) {
+    public StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto, MultipartFile image) {
         Store store = getStore(id);
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            StoreRequestDto storeRequestDto = objectMapper.readValue(storeJson, StoreRequestDto.class);
-            objectMapperUtils.mapToEntityFromDto(storeRequestDto, store);
-            Store updatedStore = storeRepository.save(store);
-            return objectMapperUtils.convertEntityAndDto(updatedStore, StoreResponseDto.class);
-        } catch (JsonProcessingException ex) {
-            logger.error("Getting exception while reading storeJson", ex);
-            throw new RuntimeException(ex);
-        }
+        objectMapperUtils.mapToEntityFromDto(storeRequestDto, store);
+        Store updatedStore = storeRepository.save(store);
+        return objectMapperUtils.convertEntityAndDto(updatedStore, StoreResponseDto.class);
     }
 
     private Store getStore(Long id) {

@@ -2,11 +2,11 @@ package taplink.network.menu.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.common.constants.AppConstants;
+import taplink.network.menu.api.dto.request.StoreRequestDto;
 import taplink.network.menu.api.dto.response.ResponseDto;
 import taplink.network.menu.api.dto.response.StoreResponseDto;
 import taplink.network.menu.api.service.StoreService;
@@ -30,15 +30,15 @@ public class StoreController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createStore(@RequestPart("store") String storeJson, @RequestPart("image") MultipartFile image) {
-        StoreResponseDto storeResponseDto = storeService.createStore(storeJson, image);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createStore(@RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart("image") MultipartFile image) {
+        StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, image);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") String storeJson, @RequestPart("image") MultipartFile image) {
-        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeJson, image);
+    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart("image") MultipartFile image) {
+        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeRequestDto, image);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
     }
 
@@ -47,7 +47,6 @@ public class StoreController {
         StoreResponseDto storeResponseDto = storeService.findById(id);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
     }
-
 
 
 }
