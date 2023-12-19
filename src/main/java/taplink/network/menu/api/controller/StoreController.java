@@ -2,11 +2,10 @@ package taplink.network.menu.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.common.constants.AppConstants;
 import taplink.network.menu.api.dto.response.ResponseDto;
 import taplink.network.menu.api.dto.response.StoreResponseDto;
@@ -20,7 +19,7 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping
-    private ResponseEntity<?> searchStores(
+    public ResponseEntity<?> searchStores(
             @RequestParam(value = "searchKey", defaultValue = AppConstants.EMPTY, required = false) String searchKey,
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -30,5 +29,19 @@ public class StoreController {
         ResponseDto<StoreResponseDto> responseDTO = storeService.searchStores(searchKey, pageNo, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/upload", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> createStore(@RequestPart("store") String storeJson, @RequestPart("image") MultipartFile image) {
+        StoreResponseDto storeResponseDto = storeService.createStore(storeJson, image);
+        return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{storeId}")
+    public ResponseEntity<?> findStoreById(@PathVariable("storeId") Long id) {
+        StoreResponseDto storeResponseDto = storeService.findById(id);
+        return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
+    }
+
+
 
 }
