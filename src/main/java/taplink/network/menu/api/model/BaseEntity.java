@@ -25,7 +25,7 @@ public class BaseEntity {
 
     @Version
     @Column(name = Base.VERSION)
-    protected int version;
+    protected Integer version;
 
     @CreatedDate
     @Column(name = Base.CREATED_AT)

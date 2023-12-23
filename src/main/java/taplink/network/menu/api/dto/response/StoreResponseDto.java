@@ -7,15 +7,13 @@ import lombok.Setter;
 @Setter
 public class StoreResponseDto {
     private Long id;
-    private String email;
     private String name;
-    private String phone;
-    private String image;
     private String wifiPass;
-    private Integer templateId;
+    private Integer storeTemplateId;
+    private Integer menuTemplateId;
     private String address;
-    private Integer wardId;
-    private Integer districtId;
-    private Integer cityId;
-    private Integer storeTypeId;
+    private Long wardId;
+    private Long districtId;
+    private Long cityId;
+    private Long storeTypeId;
 }
