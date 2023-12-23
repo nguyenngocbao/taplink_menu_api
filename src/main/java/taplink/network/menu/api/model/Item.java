@@ -1,14 +1,17 @@
 package taplink.network.menu.api.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "ITEM")
+@Table(name = "ITEMS")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item extends BaseEntity {
 
     @Column(name = "NAME")
@@ -20,8 +23,12 @@ public class Item extends BaseEntity {
     @Column(name = "IMAGE")
     private String image;
 
-    @Column(name = "ORDER")
-    private Integer order;
+    @Column(name = "SORT_ORDER")
+    private Integer sortOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRICE_ID", nullable = false)

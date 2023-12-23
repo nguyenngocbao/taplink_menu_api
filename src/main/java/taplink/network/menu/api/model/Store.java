@@ -1,26 +1,23 @@
 package taplink.network.menu.api.model;
 
 import jakarta.persistence.*;
-import taplink.network.menu.api.common.enums.StoreTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "STORE")
+@Table(name = "STORES")
+@Getter
+@Setter
 public class Store extends BaseEntity {
-
-    @Column(name = "EMAIL", unique = true, nullable = false)
-    private String email;
 
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "PHONE", nullable = false)
-    private String phone;
-
     @Column(name = "ACTIVE")
-    private boolean active;
+    private Boolean active = Boolean.TRUE;
 
     @Column(name = "IMAGE")
     private String image;
@@ -28,23 +25,33 @@ public class Store extends BaseEntity {
     @Column(name = "WIFI_PASSWORD")
     private String wifiPass;
 
-    @Column(name = "TEMPLATE_ID")
-    private Integer templateId;
+    @Column(name = "STORE_TEMPLATE_ID")
+    private Integer storeTemplateId;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "STORE_ID")
+    @Column(name = "MENU_TEMPLATE_ID")
+    private Integer menuTemplateId;
+
+    @Column(name = "ADDRESS")
+    private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WARD_ID")
+    private Ward ward;
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Category> categories = new HashSet<>();
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private Set<Device> devices = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ADDRESS_ID")
-    private Address address;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_TYPE_ID")
     private StoreType storeType;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "MENU_ID", nullable = false)
-    private Menu menu;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "STORE_USER",
+            joinColumns = @JoinColumn(name = "STORE_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID", nullable = false))
+    private Set<User> users = new HashSet<>();
 
 }

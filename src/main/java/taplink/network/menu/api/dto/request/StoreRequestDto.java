@@ -1,19 +1,14 @@
 package taplink.network.menu.api.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
 public class StoreRequestDto {
-    private String email;
     private String name;
-    private String phone;
-    private boolean active;
     private String wifiPass;
-    private Integer templateId;
+    private Integer storeTemplateId;
+    private Integer menuTemplateId;
     private String address;
-    private Integer wardId;
-    private Integer districtId;
-    private Integer cityId;
-    private Integer storeTypeId;
+    private Long wardId;
+    private Long storeTypeId;
 }

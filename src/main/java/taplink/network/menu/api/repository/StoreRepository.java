@@ -8,11 +8,7 @@ import taplink.network.menu.api.model.Store;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
-    @Query("SELECT s FROM Store s WHERE " +
-            "(s.name LIKE CONCAT('%', :searchKey, '%')) OR " +
-            "(s.phone LIKE CONCAT('%', :searchKey, '%') OR " +
-            "s.email LIKE CONCAT('%', :searchKey, '%')) AND " +
-            "s.active = true")
+    @Query("SELECT s FROM Store s WHERE (s.name LIKE CONCAT('%', :searchKey, '%')) AND s.active = true")
     Page<Store> searchStores(String searchKey, Pageable pageable);
 
 }
