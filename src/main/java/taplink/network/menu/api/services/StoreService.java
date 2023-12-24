@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.dtos.response.StoreResponseDto;
+import taplink.network.menu.api.models.Store;
 
 public interface StoreService {
 
@@ -16,4 +17,6 @@ public interface StoreService {
     StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto, MultipartFile image);
 
     void deleteStore(Long id);
+
+    Store getStore(Long id);
 }

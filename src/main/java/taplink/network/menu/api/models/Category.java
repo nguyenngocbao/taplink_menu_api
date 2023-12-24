@@ -26,6 +26,9 @@ public class Category extends BaseEntity {
     @Column(name = "TEMPLATE_ID")
     private Integer templateId;
 
+    @Column(name = "ACTIVE", nullable = false)
+    private Boolean active = Boolean.TRUE;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID")
     private Store store;
