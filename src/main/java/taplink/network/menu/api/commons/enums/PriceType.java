@@ -3,7 +3,7 @@ package taplink.network.menu.api.commons.enums;
 import lombok.Getter;
 
 @Getter
-public enum PriceTemplate {
+public enum PriceType {
 
     SINGLE(1, "Single"),
     RANGE(2, "Range"),
@@ -12,7 +12,7 @@ public enum PriceTemplate {
     private final int id;
     private final String name;
 
-    PriceTemplate(int id, String name) {
+    PriceType(int id, String name) {
         this.id = id;
         this.name = name;
     }

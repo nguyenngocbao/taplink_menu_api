@@ -30,8 +30,10 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "PRICE_ID", nullable = false)
-    private Price price;
+    @Column(name = "PRICE_TYPE_ID")
+    private Integer priceTypeId;
+
+    @Column(name = "PRICE_INFO", columnDefinition = "json")
+    private String priceInfo;
 
 }
