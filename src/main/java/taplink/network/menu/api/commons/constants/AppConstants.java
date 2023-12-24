@@ -7,5 +7,5 @@ public class AppConstants {
     public static final String DEFAULT_SORT_BY = "id";
     public static final String DEFAULT_SORT_DIRECTION = "asc";
     public static final String EMPTY = "";
-    public static final String SORT_BY_SORT_ORDER = "sort_order";
+    public static final String SORT_BY_SORT_ORDER = "sortOrder";
 }
