@@ -23,6 +23,9 @@ public class Item extends BaseEntity {
     @Column(name = "IMAGE")
     private String image;
 
+    @Column(name = "ACTIVE")
+    private Boolean active = Boolean.TRUE;
+
     @Column(name = "SORT_ORDER")
     private Integer sortOrder;
 
