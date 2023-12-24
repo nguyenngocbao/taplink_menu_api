@@ -15,6 +15,8 @@
 	<description>TapLink Menu API</description>
 	<properties>
 		<java.version>17</java.version>
+		<model-mapper.version>3.1.1</model-mapper.version>
+		<spring-doc.version>2.2.0</spring-doc.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -39,12 +41,17 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>3.1.1</version>
+			<version>${model-mapper.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${spring-doc.version}</version>
 		</dependency>
 	</dependencies>
 

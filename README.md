@@ -1,1 +1,2 @@
-# taplink_menu_api
+# taplink_menu_ap
+- Swagger API: ${URL}/swagger-ui/index.html
