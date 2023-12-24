@@ -77,6 +77,11 @@ public class StoreServiceImpl implements StoreService {
         storeRepository.save(store);
     }
 
+    @Override
+    public Store getStore(Long id) {
+        return storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", id));
+    }
+
     private StoreResponseDto getStoreResponseDto(Store savedStore) {
         return storeConverter.convertToDtoFromEntity(Collections.singletonList(savedStore)).get(0);
     }
@@ -87,10 +92,6 @@ public class StoreServiceImpl implements StoreService {
 
     private Ward getWard(StoreRequestDto storeRequestDto) {
         return wardRepository.findById(storeRequestDto.getWardId()).orElseThrow(() -> new ResourceNotFoundException("Ward", storeRequestDto.getWardId()));
-    }
-
-    private Store getStore(Long id) {
-        return storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", id));
     }
 
 }
