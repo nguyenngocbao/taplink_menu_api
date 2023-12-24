@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>taplink.network</groupId>
 	<artifactId>taplink-menu-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<name>taplink-menu-api</name>
 	<description>TapLink Menu API</description>
 	<properties>

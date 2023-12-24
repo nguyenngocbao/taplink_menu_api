@@ -1,0 +1,11 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "8181:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://103.245.237.45:3306/taplink_menu_api
+      - SPRING_DATASOURCE_USERNAME=taplink_menu_api
+      - SPRING_DATASOURCE_PASSWORD=Taplink@123
+      - SPRING_PROFILES_ACTIVE=prod
