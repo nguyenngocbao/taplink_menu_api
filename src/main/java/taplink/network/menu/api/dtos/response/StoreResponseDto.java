@@ -8,6 +8,7 @@ import lombok.Setter;
 public class StoreResponseDto {
     private Long id;
     private String name;
+    private String image;
     private String wifiPass;
     private Integer storeTemplateId;
     private Integer menuTemplateId;

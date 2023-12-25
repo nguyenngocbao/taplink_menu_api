@@ -1,6 +1,7 @@
 package taplink.network.menu.api.commons.converters;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
@@ -16,19 +17,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StoreConverter {
 
+    private final ImageConverter imageConverter;
     private final ObjectMapperUtils objectMapperUtils;
 
-    public Store convertToNewEntityFromDto(StoreRequestDto dto, Ward ward, StoreType storeType) {
+    public Store convertToNewEntityFromDto(StoreRequestDto dto, Ward ward, StoreType storeType, String imageName) {
         Store store = objectMapperUtils.convertEntityAndDto(dto, Store.class);
         store.setWard(ward);
         store.setStoreType(storeType);
+        store.setImage(imageName);
         return store;
     }
 
-    public void convertToPersistedEntityFromDto(Store store, StoreRequestDto dto, Ward ward, StoreType storeType) {
+    public Store convertToPersistedEntityFromDto(Store store, StoreRequestDto dto, Ward ward, StoreType storeType, String imageName) {
         objectMapperUtils.convertToPersistedEntityFromDto(store, dto);
         store.setWard(ward);
         store.setStoreType(storeType);
+        store.setImage(imageName);
+        return store;
     }
 
     public List<StoreResponseDto> convertToDtoFromEntity(List<Store> stores) {
@@ -38,6 +43,9 @@ public class StoreConverter {
             storeResponseDto.setWardId(store.getWard().getId());
             storeResponseDto.setDistrictId(store.getWard().getDistrict().getId());
             storeResponseDto.setCityId(store.getWard().getDistrict().getId());
+            if (store.getImage() != null) {
+                storeResponseDto.setImage(imageConverter.getImageUrlFromName(store.getImage()));
+            }
             return storeResponseDto;
         }).collect(Collectors.toList());
     }

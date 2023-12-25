@@ -11,3 +11,14 @@ spring:
         show-sql: true
     hibernate:
       ddl-auto: update
+
+minio:
+  endpoint: https://minio.taplink.network/
+  credentials:
+    access-key: 9XWopUKy0LguxwT7O9DR
+    secret-key: TpZ6Kn02ft1i5C7FiOPbQrzZopqzqUL8B1cJIVgD
+  bucket-name: testmenu
+
+server:
+  base-url: http://localhost:8080
+  image-url: /api/v1/file/image?name=
