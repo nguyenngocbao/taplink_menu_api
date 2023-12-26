@@ -2,19 +2,20 @@ package taplink.network.menu.api.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import taplink.network.menu.api.dtos.ErrorDetails;
+import taplink.network.menu.api.dtos.response.ApiErrorResponse;
+import taplink.network.menu.api.exceptions.DuplicateException;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionController {
@@ -22,39 +23,44 @@ public class GlobalExceptionController {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionController.class);
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest webRequest) {
-        logger.error("ResourceNotFoundException", ex);
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiErrorResponse> handleNotFoundException(ResourceNotFoundException e) {
+        logger.error("ResourceNotFoundException", e);
+        return ResponseEntity.status(NOT_FOUND).body(new ApiErrorResponse(NOT_FOUND.value(), e.getMessage()));
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ErrorDetails> conflictData(Exception ex, WebRequest webRequest) {
-        logger.error("SQLIntegrityConstraintViolationException", ex);
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorResponse> handleRequestNotValidException(MethodArgumentNotValidException e) {
+        List<String> errors = new ArrayList<>();
+        e.getBindingResult()
+                .getFieldErrors().forEach(error -> errors.add(error.getField() + ": " + error.getDefaultMessage()));
+        e.getBindingResult()
+                .getGlobalErrors() //Global errors are not associated with a specific field but are related to the entire object being validated.
+                .forEach(error -> errors.add(error.getObjectName() + ": " + error.getDefaultMessage()));
+
+        String message = "Validation of request failed: %s".formatted(String.join(", ", errors));
+        return ResponseEntity.status(BAD_REQUEST).body(new ApiErrorResponse(BAD_REQUEST.value(), message));
     }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorDetails> methodNotSupportedException(Exception ex, WebRequest webRequest) {
-        logger.error("HttpRequestMethodNotSupportedException", ex);
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.METHOD_NOT_ALLOWED);
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException() {
+        return ResponseEntity.status(UNAUTHORIZED)
+                .body(new ApiErrorResponse(UNAUTHORIZED.value(), "Invalid username or password"));
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorDetails> badRequestHandler(Exception ex, WebRequest webRequest) {
-        logger.error("BadRequestException", ex);
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateException(DuplicateException e) {
+        return ResponseEntity.status(CONFLICT).body(new ApiErrorResponse(CONFLICT.value(), e.getMessage()));
     }
 
-    @ExceptionHandler({Exception.class, IllegalStateException.class})
-    public ResponseEntity<ErrorDetails> handleUnhandledException(Exception ex, WebRequest webRequest) {
-        logger.error("UnhandledException", ex);
-        String message = "There was some error in processing your request. An exception has been logged";
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), message, webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public ResponseEntity<ApiErrorResponse> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e) {
+        return ResponseEntity.status(UNAUTHORIZED).body(new ApiErrorResponse(UNAUTHORIZED.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorResponse> handleUnknownException(Exception e) {
+        logger.error("UnhandledException", e);
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiErrorResponse(INTERNAL_SERVER_ERROR.value(), e.getMessage()));
     }
 
 }

@@ -1,3 +1,14 @@
 spring:
   profiles:
     active: dev
+
+
+logging.level:
+  root: INFO
+  liquibase: INFO
+
+springdoc:
+  api-docs:
+    path: /taplink-api-docs
+  swagger-ui:
+    path: /taplink-api-docs/swagger-ui-custom.html

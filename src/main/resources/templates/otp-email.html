@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>OTP Email</title>
+  <style type="text/css">
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+    .otp-code {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px dashed #333;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+<div class="email-container">
+  <h1>Your One-Time Password (OTP)</h1>
+  <p>Hello,</p>
+  <p>Please use the following One-Time Password to complete your login:</p>
+  <!-- Dynamic OTP code -->
+  <div class="otp-code" th:text="${otpCode}">123456</div>
+  <p>This OTP is valid for only 5 minutes. Do not share this OTP with anyone.</p>
+</div>
+</body>
+</html>
