@@ -13,16 +13,16 @@ public class JavaMailSenderConfig {
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+        mailSender.setHost("smtpout.secureserver.net");
+        mailSender.setPort(465);
 
-        mailSender.setUsername("lmthong98@gmail.com");
-        mailSender.setPassword("pvxspejbhvqiaoso");
+        mailSender.setUsername("team@retrocraft.io");
+        mailSender.setPassword("Retrocraft@2023");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.enable", "true");
         props.put("mail.debug", "true");
 
         return mailSender;

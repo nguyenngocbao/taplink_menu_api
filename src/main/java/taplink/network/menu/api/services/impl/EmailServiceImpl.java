@@ -18,6 +18,7 @@ import taplink.network.menu.api.dtos.email.EmailTemplate;
 import taplink.network.menu.api.services.NotificationService;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,24 +30,20 @@ public class EmailServiceImpl implements NotificationService {
     private final ITemplateEngine templateEngine;
 
     @Async
-    public void sendMail(EmailRequestDto emailRequestDto) {
-        String from = emailRequestDto.getFrom().getEmail();
+    public void sendNotification(EmailRequestDto emailRequestDto) {
         String[] tos = emailRequestDto.getTos().stream().map(EmailId::getEmail).toArray(String[]::new);
-        String[] ccs = emailRequestDto.getCcs().stream().map(EmailId::getEmail).toArray(String[]::new);
-        logger.info("Sending email to {} cc {}...", tos, ccs);
+        logger.info("Sending email to {}...", tos);
         try {
             String processedBody = getBody(emailRequestDto);
             MimeMessage message = emailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(from);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(tos);
-            helper.setCc(ccs);
             helper.setSubject(emailRequestDto.getSubject());
-            helper.setText(processedBody);
+            helper.setText(processedBody, true);
             emailSender.send(message);
             logger.info("Email sent!");
         } catch (Exception e) {
-            logger.error("Error during sending email to {} cc {}", tos, ccs, e);
+            logger.error("Error during sending email to {}", tos);
         }
     }
 

@@ -3,5 +3,5 @@ package taplink.network.menu.api.services;
 import taplink.network.menu.api.dtos.email.EmailRequestDto;
 
 public interface NotificationService {
-    void sendMail(EmailRequestDto emailRequestDto);
+    void sendNotification(EmailRequestDto emailRequestDto);
 }
