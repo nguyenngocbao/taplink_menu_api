@@ -23,8 +23,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final ObjectMapperUtils objectMapperUtils;
 
     @Override
-    public CategoryResponseDto createCategory(Long storeId, CategoryRequestDto categoryRequestDto) {
-        Store store = storeService.getStore(storeId);
+    public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
+        Store store = storeService.getStore(categoryRequestDto.getStoreId());
         Category category = objectMapperUtils.convertEntityAndDto(categoryRequestDto, Category.class);
         category.setStore(store);
         Category savedCategory = categoryRepository.save(category);

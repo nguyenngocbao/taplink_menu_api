@@ -43,6 +43,9 @@ public class User extends BaseEntity {
     @ManyToMany(mappedBy = "users")
     private Set<Store> stores = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserStoreRole> userStoreRoles = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

@@ -1,4 +1,4 @@
-package taplink.network.menu.api.secutiry;
+package taplink.network.menu.api.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
