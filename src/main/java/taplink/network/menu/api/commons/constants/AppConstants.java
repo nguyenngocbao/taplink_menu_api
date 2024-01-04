@@ -8,4 +8,5 @@ public class AppConstants {
     public static final String DEFAULT_SORT_DIRECTION = "asc";
     public static final String EMPTY = "";
     public static final String SORT_BY_SORT_ORDER = "sortOrder";
+    public static final String ADMIN_ROLE = "ADMIN";
 }

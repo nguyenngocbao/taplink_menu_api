@@ -8,9 +8,9 @@ import taplink.network.menu.api.models.Store;
 
 public interface StoreService {
 
-    ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir);
+    ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, String username);
 
-    StoreResponseDto createStore(StoreRequestDto storeRequestDto, MultipartFile image);
+    StoreResponseDto createStore(StoreRequestDto storeRequestDto, MultipartFile image, String username);
 
     StoreResponseDto findById(Long id);
 

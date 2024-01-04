@@ -6,7 +6,7 @@ import taplink.network.menu.api.dtos.response.CategoryResponseDto;
 import java.util.List;
 
 public interface CategoryService {
-    CategoryResponseDto createCategory(Long storeId, CategoryRequestDto categoryRequestDto);
+    CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto);
 
     List<CategoryResponseDto> getAllCategories(Long storeId);
 

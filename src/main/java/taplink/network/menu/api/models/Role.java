@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,9 +16,20 @@ import lombok.Setter;
 @Entity
 @Table(name = "ROLES")
 public class Role extends BaseEntity {
-    @Column(name = "CODE")
+
+    @Column(name = "CODE", unique = true)
     private String code;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserStoreRole> userStoreRoles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "ROLE_PERMISSION",
+            joinColumns = @JoinColumn(name = "ROLE_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "PERMISSION_ID", nullable = false))
+    private Set<Permission> permissions = new HashSet<>();
+
 }

@@ -1,4 +1,4 @@
-package taplink.network.menu.api.secutiry;
+package taplink.network.menu.api.security;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

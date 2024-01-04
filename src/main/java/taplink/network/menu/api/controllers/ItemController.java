@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,13 @@ public class ItemController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/{itemId}")
+    public ResponseEntity<?> findItemById(@PathVariable Long itemId) {
+        ItemResponseDto itemResponseDto = itemService.findById(itemId);
+        return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasPermission(#itemRequestDto.categoryId, 'CATEGORY', 'ITEM_CREATE')")
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> createItem(@RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart("image") MultipartFile image) {
         ItemResponseDto itemResponseDto = itemService.createItem(itemRequestDto, image);
@@ -49,21 +57,17 @@ public class ItemController {
         return new ResponseEntity<>(itemResponseDto, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> updateItem(@PathVariable("id") Long id, @RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart("image") MultipartFile image) {
-        ItemResponseDto itemResponseDto = itemService.updateItem(id, itemRequestDto, image);
+    @PreAuthorize("hasPermission(#itemId, 'ITEM', 'ITEM_EDIT')")
+    @PutMapping(value = "/{itemId}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> updateItem(@PathVariable Long itemId, @RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart("image") MultipartFile image) {
+        ItemResponseDto itemResponseDto = itemService.updateItem(itemId, itemRequestDto, image);
         return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/{itemId}")
-    public ResponseEntity<?> findItemById(@PathVariable("itemId") Long id) {
-        ItemResponseDto itemResponseDto = itemService.findById(id);
-        return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
-    }
-
+    @PreAuthorize("hasPermission(#itemId, 'ITEM', 'ITEM_DELETE')")
     @DeleteMapping("/{itemId}")
-    public ResponseEntity<?> deleteItemById(@PathVariable("itemId") Long id) {
-        itemService.deleteItem(id);
+    public ResponseEntity<?> deleteItemById(@PathVariable Long itemId) {
+        itemService.deleteItem(itemId);
         return new ResponseEntity<>("Deleted item successfully", HttpStatus.OK);
     }
 

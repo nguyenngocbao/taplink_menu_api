@@ -54,4 +54,17 @@ public class Store extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "USER_ID", nullable = false))
     private Set<User> users = new HashSet<>();
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserStoreRole> userStoreRoles = new HashSet<>();
+
+    public void addUser(User user) {
+        user.getStores().add(this);
+        this.users.add(user);
+    }
+
+    public void removeUser(User user) {
+        user.getStores().remove(this);
+        this.users.remove(user);
+    }
+
 }

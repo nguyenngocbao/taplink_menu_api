@@ -15,7 +15,7 @@ import taplink.network.menu.api.dtos.request.OtpRequestDto;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.User;
 import taplink.network.menu.api.repositories.UserRepository;
-import taplink.network.menu.api.secutiry.OtpAuthenticationToken;
+import taplink.network.menu.api.security.OtpAuthenticationToken;
 import taplink.network.menu.api.services.LoginService;
 import taplink.network.menu.api.services.NotificationService;
 import taplink.network.menu.api.services.OtpService;
