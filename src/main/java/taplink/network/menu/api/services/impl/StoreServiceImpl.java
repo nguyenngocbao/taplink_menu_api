@@ -37,9 +37,7 @@ public class StoreServiceImpl implements StoreService {
 
     private final Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
 
-    @Autowired
-    private FileService fileService;
-
+    private final FileService fileService;
     private final StoreRepository storeRepository;
     private final WardRepository wardRepository;
     private final StoreTypeRepository storeTypeRepository;

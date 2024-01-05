@@ -31,9 +31,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
 
-    @Autowired
-    private FileService fileService;
-
+    private final FileService fileService;
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final ItemConverter itemConverter;

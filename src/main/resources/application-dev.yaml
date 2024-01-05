@@ -19,6 +19,3 @@ minio:
     secret-key: TpZ6Kn02ft1i5C7FiOPbQrzZopqzqUL8B1cJIVgD
   bucket-name: testmenu
 
-server:
-  base-url: http://localhost:8080
-  image-url: /api/v1/file/image?name=
