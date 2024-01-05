@@ -59,6 +59,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/files/image/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/devices/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/devices/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/districts/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
