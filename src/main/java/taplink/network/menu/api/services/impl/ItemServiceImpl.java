@@ -3,6 +3,7 @@ package taplink.network.menu.api.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import taplink.network.menu.api.models.Category;
 import taplink.network.menu.api.models.Item;
 import taplink.network.menu.api.repositories.CategoryRepository;
 import taplink.network.menu.api.repositories.ItemRepository;
+import taplink.network.menu.api.services.FileService;
 import taplink.network.menu.api.services.ItemService;
 
 import java.util.Collections;
@@ -29,6 +31,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final Logger logger = LoggerFactory.getLogger(ItemServiceImpl.class);
 
+    private final FileService fileService;
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final ItemConverter itemConverter;
@@ -45,7 +48,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDto createItem(ItemRequestDto itemRequestDto, MultipartFile image) {
         Category category = getCategory(itemRequestDto);
-        Item item = itemConverter.convertToNewEntityFromDto(itemRequestDto, category);
+        String imageName = fileService.checkAndUploadImage(image);
+        Item item = itemConverter.convertToNewEntityFromDto(itemRequestDto, category, imageName);
         Item savedItem = itemRepository.save(item);
         return getItemResponseDto(savedItem);
     }
@@ -60,7 +64,9 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto, MultipartFile image) {
         Category category = getCategory(itemRequestDto);
         Item item = getItem(id);
-        itemConverter.convertToPersistedEntityFromDto(item, itemRequestDto, category);
+        String imageName = fileService.checkAndUploadImage(image);
+        fileService.deleteFile(item.getImage()); // delete old file after upload new image successfully
+        item = itemConverter.convertToPersistedEntityFromDto(item, itemRequestDto, category, imageName);
         Item savedItem = itemRepository.save(item);
         return getItemResponseDto(savedItem);
     }
@@ -69,6 +75,8 @@ public class ItemServiceImpl implements ItemService {
     public void deleteItem(Long id) {
         Item item = getItem(id);
         item.setActive(false);
+        fileService.deleteFile(item.getImage());
+        item.setImage(null);
         itemRepository.save(item);
     }
 

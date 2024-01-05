@@ -3,6 +3,7 @@ package taplink.network.menu.api.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,13 @@ import taplink.network.menu.api.dtos.request.StoreRequestDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.dtos.response.StoreResponseDto;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
+import taplink.network.menu.api.models.Store;
+import taplink.network.menu.api.models.StoreType;
+import taplink.network.menu.api.models.Ward;
+import taplink.network.menu.api.repositories.StoreRepository;
+import taplink.network.menu.api.repositories.StoreTypeRepository;
+import taplink.network.menu.api.repositories.WardRepository;
+import taplink.network.menu.api.services.FileService;
 import taplink.network.menu.api.models.*;
 import taplink.network.menu.api.repositories.*;
 import taplink.network.menu.api.services.StoreService;
@@ -29,6 +37,7 @@ public class StoreServiceImpl implements StoreService {
 
     private final Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
 
+    private final FileService fileService;
     private final StoreRepository storeRepository;
     private final WardRepository wardRepository;
     private final StoreTypeRepository storeTypeRepository;
@@ -53,7 +62,8 @@ public class StoreServiceImpl implements StoreService {
         Role adminRole = roleRepository.findByCode(AppConstants.ADMIN_ROLE).orElseThrow(() -> new ResourceNotFoundException("Role Admin could not be found"));
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
-        Store store = storeConverter.convertToNewEntityFromDto(storeRequestDto, ward, storeType);
+        String imageName = fileService.checkAndUploadImage(image);
+        Store store = storeConverter.convertToNewEntityFromDto(storeRequestDto, ward, storeType, imageName);
         store.addUser(user);
         Store savedStore = storeRepository.save(store);
         UserStoreRole userStoreRole = UserStoreRole.builder()
@@ -76,7 +86,9 @@ public class StoreServiceImpl implements StoreService {
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
         Store store = getStore(id);
-        storeConverter.convertToPersistedEntityFromDto(store, storeRequestDto, ward, storeType);
+        String imageName = fileService.checkAndUploadImage(image);
+        fileService.deleteFile(store.getImage()); // delete old file after upload new image successfully
+        store = storeConverter.convertToPersistedEntityFromDto(store, storeRequestDto, ward, storeType, imageName);
         Store savedStore = storeRepository.save(store);
         return getStoreResponseDto(savedStore);
     }
@@ -85,6 +97,8 @@ public class StoreServiceImpl implements StoreService {
     public void deleteStore(Long id) {
         Store store = getStore(id);
         store.setActive(false);
+        fileService.deleteFile(store.getImage());
+        store.setImage(null);
         storeRepository.save(store);
     }
 

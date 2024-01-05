@@ -9,6 +9,7 @@ public class ItemResponseDto {
     private Long id;
     private String name;
     private String description;
+    private String image;
     private Integer sortOrder;
     private Integer priceTypeId;
     private Long categoryId;
