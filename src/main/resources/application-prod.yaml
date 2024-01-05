@@ -16,4 +16,4 @@ minio:
   credentials:
     access-key: 9XWopUKy0LguxwT7O9DR
     secret-key: TpZ6Kn02ft1i5C7FiOPbQrzZopqzqUL8B1cJIVgD
-  bucket-name: prod-menu
+  bucket-name: testmenu
