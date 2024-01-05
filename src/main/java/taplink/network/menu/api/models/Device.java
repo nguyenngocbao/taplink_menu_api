@@ -18,7 +18,7 @@ public class Device extends BaseEntity {
     private String uuid;
 
     @Column(name = "ACTIVE")
-    private boolean active;
+    private Boolean active = Boolean.TRUE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID")
