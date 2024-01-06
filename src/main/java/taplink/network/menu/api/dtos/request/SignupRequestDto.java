@@ -17,11 +17,12 @@ public record SignupRequestDto(
         @Schema(description = "email", example = "lmthong98@gmail.com")
         @Email(message = "Invalid email format")
         @NotBlank(message = "Email cannot be blank")
-        String email,
+        String email
 
-        @Schema(description = "password", example = "123456")
-        @NotBlank(message = "Password cannot be blank")
-        @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
-        String password) {
+//        @Schema(description = "password", example = "123456")
+//        @NotBlank(message = "Password cannot be blank")
+//        @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+//        String password
+) {
 
 }
