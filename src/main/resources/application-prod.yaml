@@ -10,6 +10,22 @@ spring:
     hibernate:
       ddl-auto: none
       show-sql: false
+  mail:
+    default-encoding: UTF-8
+    host: ${SPRING_MAIL_HOST}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        debug: true
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 minio:
   endpoint: https://minio.taplink.network/

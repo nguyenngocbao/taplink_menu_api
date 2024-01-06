@@ -12,6 +12,24 @@ spring:
     hibernate:
       ddl-auto: update
 
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: lmthong98@gmail.com
+    password: pvxspejbhvqiaoso
+    properties:
+      mail:
+        debug: true
+        transport:
+          protocol: smtp
+        smtp:
+          port: 587
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+
 minio:
   endpoint: https://minio.taplink.network/
   credentials:

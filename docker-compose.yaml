@@ -12,3 +12,6 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
       - SPRING_JPA_SHOW_SQL=false
       - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_USERNAME=lmthong98@gmail.com
+      - SPRING-MAIL_PASSWORD=pvxspejbhvqiaoso

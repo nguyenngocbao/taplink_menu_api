@@ -43,7 +43,7 @@ public class EmailServiceImpl implements NotificationService {
             emailSender.send(message);
             logger.info("Email sent!");
         } catch (Exception e) {
-            logger.error("Error during sending email to {}", tos);
+            logger.error("Error during sending email to {}", tos, e);
         }
     }
 
