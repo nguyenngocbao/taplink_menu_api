@@ -14,4 +14,4 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_MAIL_HOST=smtp.gmail.com
       - SPRING_MAIL_USERNAME=lmthong98@gmail.com
-      - SPRING-MAIL_PASSWORD=pvxspejbhvqiaoso
+      - SPRING_MAIL_PASSWORD=pvxspejbhvqiaoso
