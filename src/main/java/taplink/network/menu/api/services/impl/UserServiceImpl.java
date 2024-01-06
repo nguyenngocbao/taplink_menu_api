@@ -26,11 +26,11 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateException(String.format("User with the email address '%s' already exists.", email));
         }
 
-        String hashedPassword = passwordEncoder.encode(requestDto.password());
+//        String hashedPassword = passwordEncoder.encode(requestDto.password());
         User user = User.builder().
                 username(requestDto.username())
                 .email(requestDto.email())
-                .password(hashedPassword)
+//                .password(hashedPassword)
                 .fullName(requestDto.fullName())
                 .active(true)
                 .build();
