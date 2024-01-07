@@ -12,7 +12,10 @@ import taplink.network.menu.api.commons.constants.AppConstants;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.dtos.response.StoreResponseDto;
+import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
 import taplink.network.menu.api.services.StoreService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +41,12 @@ public class StoreController {
     public ResponseEntity<?> findStoreById(@PathVariable("storeId") Long id) {
         StoreResponseDto storeResponseDto = storeService.findById(id);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/store-type")
+    public ResponseEntity<?> getStoreTypes() {
+        List<StoreTypeResponseDto> storeTypeResponseDtoList = storeService.getStoreTypes();
+        return new ResponseEntity<>(storeTypeResponseDtoList, HttpStatus.OK);
     }
 
     @PostMapping(consumes = {"multipart/form-data"})

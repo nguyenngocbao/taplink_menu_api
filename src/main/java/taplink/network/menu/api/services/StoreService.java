@@ -4,7 +4,10 @@ import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.dtos.response.StoreResponseDto;
+import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
 import taplink.network.menu.api.models.Store;
+
+import java.util.List;
 
 public interface StoreService {
 
@@ -19,4 +22,6 @@ public interface StoreService {
     void deleteStore(Long id);
 
     Store getStore(Long id);
+
+    List<StoreTypeResponseDto> getStoreTypes();
 }

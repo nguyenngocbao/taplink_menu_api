@@ -3,7 +3,6 @@ package taplink.network.menu.api.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.commons.constants.AppConstants;
 import taplink.network.menu.api.commons.converters.StoreConverter;
+import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
 import taplink.network.menu.api.commons.utils.PageableUtils;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.dtos.response.StoreResponseDto;
+import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Store;
 import taplink.network.menu.api.models.StoreType;
@@ -45,6 +46,7 @@ public class StoreServiceImpl implements StoreService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserStoreRoleRepository userStoreRoleRepository;
+    private final ObjectMapperUtils objectMapperUtils;
 
     @Override
     public ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, String username) {
@@ -105,6 +107,13 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store getStore(Long id) {
         return storeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Store", id));
+    }
+
+    @Override
+    public List<StoreTypeResponseDto> getStoreTypes() {
+        List<StoreType> storeTypes = storeTypeRepository.findAll();
+        return objectMapperUtils.mapAll(storeTypes, StoreTypeResponseDto.class);
+
     }
 
     private StoreResponseDto getStoreResponseDto(Store savedStore) {
