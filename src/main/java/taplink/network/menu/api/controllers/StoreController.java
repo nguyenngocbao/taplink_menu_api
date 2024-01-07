@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.commons.constants.AppConstants;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
-import taplink.network.menu.api.dtos.response.ResponseDto;
-import taplink.network.menu.api.dtos.response.StoreResponseDto;
-import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
+import taplink.network.menu.api.dtos.response.*;
 import taplink.network.menu.api.services.StoreService;
 
 import java.util.List;
@@ -47,6 +45,18 @@ public class StoreController {
     public ResponseEntity<?> getStoreTypes() {
         List<StoreTypeResponseDto> storeTypeResponseDtoList = storeService.getStoreTypes();
         return new ResponseEntity<>(storeTypeResponseDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/store-template")
+    public ResponseEntity<?> getStoreTemplates() {
+        List<StoreTemplateDto> storeTemplates = storeService.getStoreTemplates();
+        return new ResponseEntity<>(storeTemplates, HttpStatus.OK);
+    }
+
+    @GetMapping("/menu-template")
+    public ResponseEntity<?> getMenuTemplates() {
+        List<MenuTemplateDto> menuTemplates = storeService.getMenuTemplates();
+        return new ResponseEntity<>(menuTemplates, HttpStatus.OK);
     }
 
     @PostMapping(consumes = {"multipart/form-data"})

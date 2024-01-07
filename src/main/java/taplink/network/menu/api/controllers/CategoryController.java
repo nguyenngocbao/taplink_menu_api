@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import taplink.network.menu.api.dtos.request.CategoryRequestDto;
 import taplink.network.menu.api.dtos.response.CategoryResponseDto;
+import taplink.network.menu.api.dtos.response.CategoryTemplateDto;
 import taplink.network.menu.api.services.CategoryService;
 
 import java.util.List;
@@ -22,6 +23,12 @@ public class CategoryController {
     public ResponseEntity<?> getAllCategories(@RequestParam Long storeId) {
         List<CategoryResponseDto> responseDtoList = categoryService.getAllCategories(storeId);
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/templates")
+    public ResponseEntity<?> getCategoryTemplates() {
+        List<CategoryTemplateDto> categoryTemplates = categoryService.getCategoryTemplates();
+        return new ResponseEntity<>(categoryTemplates, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")

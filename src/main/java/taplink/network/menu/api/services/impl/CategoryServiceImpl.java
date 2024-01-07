@@ -2,9 +2,11 @@ package taplink.network.menu.api.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import taplink.network.menu.api.commons.enums.CategoryTemplate;
 import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
 import taplink.network.menu.api.dtos.request.CategoryRequestDto;
 import taplink.network.menu.api.dtos.response.CategoryResponseDto;
+import taplink.network.menu.api.dtos.response.CategoryTemplateDto;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Category;
 import taplink.network.menu.api.models.Store;
@@ -12,6 +14,7 @@ import taplink.network.menu.api.repositories.CategoryRepository;
 import taplink.network.menu.api.services.CategoryService;
 import taplink.network.menu.api.services.StoreService;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -57,6 +60,11 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = getCategory(categoryId);
         category.setActive(false);
         categoryRepository.save(category);
+    }
+
+    @Override
+    public List<CategoryTemplateDto> getCategoryTemplates() {
+        return Arrays.stream(CategoryTemplate.values()).map(categoryTemplate -> new CategoryTemplateDto(categoryTemplate.getId(), categoryTemplate.name(), categoryTemplate.getName())).toList();
     }
 
     private Category getCategory(Long categoryId) {

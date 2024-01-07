@@ -9,9 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.commons.converters.ItemConverter;
+import taplink.network.menu.api.commons.enums.PriceType;
 import taplink.network.menu.api.commons.utils.PageableUtils;
 import taplink.network.menu.api.dtos.request.ItemRequestDto;
 import taplink.network.menu.api.dtos.response.ItemResponseDto;
+import taplink.network.menu.api.dtos.response.PriceTypeDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Category;
@@ -21,8 +23,10 @@ import taplink.network.menu.api.repositories.ItemRepository;
 import taplink.network.menu.api.services.FileService;
 import taplink.network.menu.api.services.ItemService;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -85,6 +89,11 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findById(id)
                 .filter(Item::getActive)
                 .orElseThrow(() -> new ResourceNotFoundException("Item", id));
+    }
+
+    @Override
+    public List<PriceTypeDto> getPriceTypes() {
+        return Arrays.stream(PriceType.values()).map(priceType -> new PriceTypeDto(priceType.getId(), priceType.name(), priceType.getName())).toList();
     }
 
     private ItemResponseDto getItemResponseDto(Item savedItem) {

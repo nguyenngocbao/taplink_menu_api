@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.commons.constants.AppConstants;
 import taplink.network.menu.api.commons.converters.StoreConverter;
+import taplink.network.menu.api.commons.enums.MenuTemplate;
+import taplink.network.menu.api.commons.enums.StoreTemplate;
 import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
 import taplink.network.menu.api.commons.utils.PageableUtils;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
-import taplink.network.menu.api.dtos.response.ResponseDto;
-import taplink.network.menu.api.dtos.response.StoreResponseDto;
-import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
+import taplink.network.menu.api.dtos.response.*;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Store;
 import taplink.network.menu.api.models.StoreType;
@@ -28,8 +28,10 @@ import taplink.network.menu.api.models.*;
 import taplink.network.menu.api.repositories.*;
 import taplink.network.menu.api.services.StoreService;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -114,6 +116,16 @@ public class StoreServiceImpl implements StoreService {
         List<StoreType> storeTypes = storeTypeRepository.findAll();
         return objectMapperUtils.mapAll(storeTypes, StoreTypeResponseDto.class);
 
+    }
+
+    @Override
+    public List<StoreTemplateDto> getStoreTemplates() {
+        return Arrays.stream(StoreTemplate.values()).map(storeTemplate -> new StoreTemplateDto(storeTemplate.getId(), storeTemplate.name(), storeTemplate.getName())).toList();
+    }
+
+    @Override
+    public List<MenuTemplateDto> getMenuTemplates() {
+        return Arrays.stream(MenuTemplate.values()).map(storeTemplate -> new MenuTemplateDto(storeTemplate.getId(), storeTemplate.name(), storeTemplate.getName())).toList();
     }
 
     private StoreResponseDto getStoreResponseDto(Store savedStore) {
