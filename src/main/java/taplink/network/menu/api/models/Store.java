@@ -48,23 +48,7 @@ public class Store extends BaseEntity {
     @JoinColumn(name = "STORE_TYPE_ID")
     private StoreType storeType;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "STORE_USER",
-            joinColumns = @JoinColumn(name = "STORE_ID", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID", nullable = false))
-    private Set<User> users = new HashSet<>();
-
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserStoreRole> userStoreRoles = new HashSet<>();
-
-    public void addUser(User user) {
-        user.getStores().add(this);
-        this.users.add(user);
-    }
-
-    public void removeUser(User user) {
-        user.getStores().remove(this);
-        this.users.remove(user);
-    }
 
 }

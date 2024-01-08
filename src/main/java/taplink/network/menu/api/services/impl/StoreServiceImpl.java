@@ -68,7 +68,6 @@ public class StoreServiceImpl implements StoreService {
         StoreType storeType = getStoreType(storeRequestDto);
         String imageName = fileService.checkAndUploadImage(image);
         Store store = storeConverter.convertToNewEntityFromDto(storeRequestDto, ward, storeType, imageName);
-        store.addUser(user);
         Store savedStore = storeRepository.save(store);
         UserStoreRole userStoreRole = UserStoreRole.builder()
                 .role(adminRole)

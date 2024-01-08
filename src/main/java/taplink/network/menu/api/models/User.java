@@ -40,9 +40,6 @@ public class User extends BaseEntity {
     @Column(name = "ACTIVE", nullable = false)
     private Boolean active = Boolean.TRUE;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Store> stores = new HashSet<>();
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserStoreRole> userStoreRoles = new HashSet<>();
 
