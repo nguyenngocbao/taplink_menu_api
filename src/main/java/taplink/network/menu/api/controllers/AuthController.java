@@ -31,8 +31,8 @@ public class AuthController {
     @Operation(summary = "Authenticate user and return token")
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        String token = loginService.login(loginRequestDto);
-        return ResponseEntity.ok(new LoginResponseDto(loginRequestDto.email(), token));
+        LoginResponseDto loginResponseDto = loginService.login(loginRequestDto);
+        return ResponseEntity.ok(loginResponseDto);
     }
 
 }

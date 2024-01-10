@@ -44,7 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserProfile(String username) {
-        User user = userRepository.findByUsernameOrEmail(username, username).orElseThrow(() -> new ResourceNotFoundException("User could not be found for username or email" + username));
+        User user = findByUsernameOrEmail(username, username);
         return objectMapperUtils.convertEntityAndDto(user, UserResponseDto.class);
+    }
+
+    @Override
+    public User findByUsernameOrEmail(String username, String email) {
+        return userRepository.findByUsernameOrEmail(username, username).orElseThrow(() -> new ResourceNotFoundException("User could not be found for username or email" + username));
     }
 }
