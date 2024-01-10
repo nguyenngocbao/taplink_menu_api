@@ -28,10 +28,10 @@ public class OtpAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found for email: " + email));
         Set<GrantedAuthority> authorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getCode())).collect(Collectors.toSet());
-        String otp = authentication.getCredentials().toString();
         if (authentication.getCredentials() == null) {
             throw new BadCredentialsException("Bad credentials");
         }
+        String otp = authentication.getCredentials().toString();
         boolean isOtpValid = otpService.validateOTP(user.getEmail(), otp);
         if (!isOtpValid) {
             throw new BadCredentialsException("Invalid OTP!");
