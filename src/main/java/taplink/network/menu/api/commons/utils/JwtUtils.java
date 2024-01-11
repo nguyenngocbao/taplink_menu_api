@@ -7,12 +7,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import taplink.network.menu.api.exceptions.AccessDeniedException;
+import taplink.network.menu.api.models.User;
+
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import org.springframework.security.core.userdetails.UserDetails;
-import taplink.network.menu.api.exceptions.AccessDeniedException;
 
 public class JwtUtils {
 
@@ -33,9 +34,9 @@ public class JwtUtils {
         return getTokenBody(token).getSubject();
     }
 
-    public static Boolean validateToken(String token, UserDetails userDetails) {
+    public static Boolean validateToken(String token, User user) {
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return (username.equals(user.getEmail()) || username.equals(user.getUsername())) && !isTokenExpired(token);
     }
 
     private static Claims getTokenBody(String token) {
