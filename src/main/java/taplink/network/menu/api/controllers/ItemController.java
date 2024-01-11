@@ -59,7 +59,7 @@ public class ItemController {
 
     @PreAuthorize("hasPermission(#itemRequestDto.categoryId, 'CATEGORY', 'ITEM_CREATE')")
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createItem(@RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<?> createItem(@RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
         ItemResponseDto itemResponseDto = itemService.createItem(itemRequestDto, image);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -68,7 +68,7 @@ public class ItemController {
 
     @PreAuthorize("hasPermission(#itemId, 'ITEM', 'ITEM_EDIT')")
     @PutMapping(value = "/{itemId}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> updateItem(@PathVariable Long itemId, @RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<?> updateItem(@PathVariable Long itemId, @RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
         ItemResponseDto itemResponseDto = itemService.updateItem(itemId, itemRequestDto, image);
         return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
     }

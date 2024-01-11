@@ -60,7 +60,7 @@ public class StoreController {
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createStore(Authentication authentication, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<?> createStore(Authentication authentication, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
         String username = ((UserDetails) authentication.getPrincipal()).getUsername();
         StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, image, username);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
@@ -68,7 +68,7 @@ public class StoreController {
 
     @PreAuthorize("hasPermission(#id, 'STORE', 'STORE_EDIT')")
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
         StoreResponseDto storeResponseDto = storeService.updateStore(id, storeRequestDto, image);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
     }

@@ -52,7 +52,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponseDto createItem(ItemRequestDto itemRequestDto, MultipartFile image) {
         Category category = getCategory(itemRequestDto);
-        String imageName = fileService.checkAndUploadImage(image);
+        String imageName = "";
+        if (image != null) {
+            imageName = fileService.checkAndUploadImage(image);
+        }
+
         Item item = itemConverter.convertToNewEntityFromDto(itemRequestDto, category, imageName);
         Item savedItem = itemRepository.save(item);
         return getItemResponseDto(savedItem);
@@ -68,8 +72,11 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto, MultipartFile image) {
         Category category = getCategory(itemRequestDto);
         Item item = getItem(id);
-        String imageName = fileService.checkAndUploadImage(image);
-        fileService.deleteFile(item.getImage()); // delete old file after upload new image successfully
+        String imageName = item.getImage();
+        if (image != null) {
+            imageName = fileService.checkAndUploadImage(image);
+            fileService.deleteFile(item.getImage()); // delete old file after upload new image successfully
+        }
         item = itemConverter.convertToPersistedEntityFromDto(item, itemRequestDto, category, imageName);
         Item savedItem = itemRepository.save(item);
         return getItemResponseDto(savedItem);

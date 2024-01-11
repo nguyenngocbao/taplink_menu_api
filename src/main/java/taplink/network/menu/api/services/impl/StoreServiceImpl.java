@@ -66,7 +66,11 @@ public class StoreServiceImpl implements StoreService {
         Role adminRole = roleRepository.findByCode(AppConstants.ADMIN_ROLE).orElseThrow(() -> new ResourceNotFoundException("Role Admin could not be found"));
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
-        String imageName = fileService.checkAndUploadImage(image);
+        String imageName = "";
+        if (image != null) {
+            imageName = fileService.checkAndUploadImage(image);
+        }
+
         Store store = storeConverter.convertToNewEntityFromDto(storeRequestDto, ward, storeType, imageName);
         Store savedStore = storeRepository.save(store);
         UserStoreRole userStoreRole = UserStoreRole.builder()
@@ -89,8 +93,11 @@ public class StoreServiceImpl implements StoreService {
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
         Store store = getStore(id);
-        String imageName = fileService.checkAndUploadImage(image);
-        fileService.deleteFile(store.getImage()); // delete old file after upload new image successfully
+        String imageName = store.getImage();
+        if (image != null) {
+            imageName = fileService.checkAndUploadImage(image);
+            fileService.deleteFile(store.getImage()); // delete old file after upload new image successfully
+        }
         store = storeConverter.convertToPersistedEntityFromDto(store, storeRequestDto, ward, storeType, imageName);
         Store savedStore = storeRepository.save(store);
         return getStoreResponseDto(savedStore);

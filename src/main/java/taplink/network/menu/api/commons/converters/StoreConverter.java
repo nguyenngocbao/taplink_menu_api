@@ -1,6 +1,7 @@
 package taplink.network.menu.api.commons.converters;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import taplink.network.menu.api.commons.utils.FileUtils;
 import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
@@ -42,7 +43,7 @@ public class StoreConverter {
             storeResponseDto.setWardId(store.getWard().getId());
             storeResponseDto.setDistrictId(store.getWard().getDistrict().getId());
             storeResponseDto.setCityId(store.getWard().getDistrict().getId());
-            if (store.getImage() != null) {
+            if (Strings.isNotEmpty(store.getImage())) {
                 storeResponseDto.setImage(FileUtils.getImageUrl(store.getImage()));
             }
             return storeResponseDto;
