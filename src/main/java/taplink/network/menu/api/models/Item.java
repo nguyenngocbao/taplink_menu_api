@@ -1,10 +1,20 @@
 package taplink.network.menu.api.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ITEMS")
@@ -38,5 +48,8 @@ public class Item extends BaseEntity {
 
     @Column(name = "PRICE_INFO", columnDefinition = "json")
     private String priceInfo;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems = new HashSet<>();
 
 }
