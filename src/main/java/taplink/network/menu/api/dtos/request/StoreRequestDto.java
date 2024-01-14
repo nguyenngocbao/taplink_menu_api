@@ -1,6 +1,7 @@
 package taplink.network.menu.api.dtos.request;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class StoreRequestDto {
@@ -11,4 +12,5 @@ public class StoreRequestDto {
     private String address;
     private Long wardId;
     private Long storeTypeId;
+    private MultipartFile image;
 }

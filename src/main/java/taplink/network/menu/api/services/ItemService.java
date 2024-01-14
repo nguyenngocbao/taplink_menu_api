@@ -13,7 +13,7 @@ public interface ItemService {
 
     ResponseDto<ItemResponseDto> searchItems(Long categoryId, String searchKey, int pageNo, int pageSize, String sortBy, String sortDir);
 
-    ItemResponseDto createItem(ItemRequestDto itemRequestDto, MultipartFile image);
+    ItemResponseDto createItem(ItemRequestDto itemRequestDto);
 
     ItemResponseDto findById(Long id);
 

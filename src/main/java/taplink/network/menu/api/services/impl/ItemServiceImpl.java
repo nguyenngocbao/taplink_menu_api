@@ -50,11 +50,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponseDto createItem(ItemRequestDto itemRequestDto, MultipartFile image) {
+    public ItemResponseDto createItem(ItemRequestDto itemRequestDto) {
         Category category = getCategory(itemRequestDto);
         String imageName = "";
-        if (image != null) {
-            imageName = fileService.checkAndUploadImage(image);
+        if (itemRequestDto.getImage() != null) {
+            imageName = fileService.checkAndUploadImage(itemRequestDto.getImage());
         }
 
         Item item = itemConverter.convertToNewEntityFromDto(itemRequestDto, category, imageName);

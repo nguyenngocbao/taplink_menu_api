@@ -61,14 +61,14 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public StoreResponseDto createStore(StoreRequestDto storeRequestDto, MultipartFile image, String username) {
+    public StoreResponseDto createStore(StoreRequestDto storeRequestDto, String username) {
         User user = userRepository.findByUsernameOrEmail(username, username).orElseThrow(() -> new ResourceNotFoundException("User could not be found for username or email" + username));
         Role adminRole = roleRepository.findByCode(AppConstants.ADMIN_ROLE).orElseThrow(() -> new ResourceNotFoundException("Role Admin could not be found"));
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
         String imageName = "";
-        if (image != null) {
-            imageName = fileService.checkAndUploadImage(image);
+        if (storeRequestDto.getImage() != null) {
+            imageName = fileService.checkAndUploadImage(storeRequestDto.getImage());
         }
 
         Store store = storeConverter.convertToNewEntityFromDto(storeRequestDto, ward, storeType, imageName);

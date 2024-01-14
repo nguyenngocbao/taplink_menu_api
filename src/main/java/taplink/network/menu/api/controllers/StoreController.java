@@ -60,9 +60,9 @@ public class StoreController {
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createStore(Authentication authentication, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<?> createStore(Authentication authentication, @ModelAttribute StoreRequestDto storeRequestDto) {
         String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, image, username);
+        StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, username);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
     }
 
