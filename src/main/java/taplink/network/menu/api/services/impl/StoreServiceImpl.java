@@ -89,13 +89,13 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto, MultipartFile image) {
+    public StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto) {
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
         Store store = getStore(id);
         String imageName = store.getImage();
-        if (image != null) {
-            imageName = fileService.checkAndUploadImage(image);
+        if (storeRequestDto.getImage() != null) {
+            imageName = fileService.checkAndUploadImage(storeRequestDto.getImage());
             fileService.deleteFile(store.getImage()); // delete old file after upload new image successfully
         }
         store = storeConverter.convertToPersistedEntityFromDto(store, storeRequestDto, ward, storeType, imageName);

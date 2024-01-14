@@ -60,8 +60,8 @@ public class ItemController {
 
     @PreAuthorize("hasPermission(#itemId, 'ITEM', 'ITEM_EDIT')")
     @PutMapping(value = "/{itemId}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> updateItem(@PathVariable Long itemId, @RequestPart("item") ItemRequestDto itemRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
-        ItemResponseDto itemResponseDto = itemService.updateItem(itemId, itemRequestDto, image);
+    public ResponseEntity<?> updateItem(@PathVariable Long itemId, @ModelAttribute ItemRequestDto itemRequestDto) {
+        ItemResponseDto itemResponseDto = itemService.updateItem(itemId, itemRequestDto);
         return new ResponseEntity<>(itemResponseDto, HttpStatus.OK);
     }
 

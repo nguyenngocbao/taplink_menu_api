@@ -15,7 +15,7 @@ public interface StoreService {
 
     StoreResponseDto findById(Long id);
 
-    StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto, MultipartFile image);
+    StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto);
 
     void deleteStore(Long id);
 

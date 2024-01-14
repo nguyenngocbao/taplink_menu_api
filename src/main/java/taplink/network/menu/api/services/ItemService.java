@@ -17,7 +17,7 @@ public interface ItemService {
 
     ItemResponseDto findById(Long id);
 
-    ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto, MultipartFile image);
+    ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto);
 
     void deleteItem(Long id);
 

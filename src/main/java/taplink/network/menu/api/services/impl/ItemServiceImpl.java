@@ -69,12 +69,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto, MultipartFile image) {
+    public ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto) {
         Category category = getCategory(itemRequestDto);
         Item item = getItem(id);
         String imageName = item.getImage();
-        if (image != null) {
-            imageName = fileService.checkAndUploadImage(image);
+        if (itemRequestDto.getImage() != null) {
+            imageName = fileService.checkAndUploadImage(itemRequestDto.getImage());
             fileService.deleteFile(item.getImage()); // delete old file after upload new image successfully
         }
         item = itemConverter.convertToPersistedEntityFromDto(item, itemRequestDto, category, imageName);

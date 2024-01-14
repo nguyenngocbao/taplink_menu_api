@@ -68,8 +68,8 @@ public class StoreController {
 
     @PreAuthorize("hasPermission(#id, 'STORE', 'STORE_EDIT')")
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart(value = "image", required = false) MultipartFile image) {
-        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeRequestDto, image);
+    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @ModelAttribute StoreRequestDto storeRequestDto) {
+        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeRequestDto);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
     }
 
