@@ -30,7 +30,7 @@ public class StoreController {
                                           @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
                                           @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        String username = authentication.getPrincipal().toString();
         ResponseDto<StoreResponseDto> responseDTO = storeService.searchStores(searchKey, pageNo, pageSize, sortBy, sortDir, username);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class StoreController {
 
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<?> createStore(Authentication authentication, @ModelAttribute StoreRequestDto storeRequestDto) {
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        String username = authentication.getPrincipal().toString();
         StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, username);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
     }
