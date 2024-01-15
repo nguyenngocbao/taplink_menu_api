@@ -12,9 +12,6 @@ public class StoreResponseDto {
     private String wifiPass;
     private Integer storeTemplateId;
     private Integer menuTemplateId;
+    private String phone;
     private String address;
-    private Long wardId;
-    private Long districtId;
-    private Long cityId;
-    private Long storeTypeId;
 }

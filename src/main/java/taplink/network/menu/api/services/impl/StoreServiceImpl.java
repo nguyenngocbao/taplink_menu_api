@@ -72,6 +72,7 @@ public class StoreServiceImpl implements StoreService {
         }
 
         Store store = storeConverter.convertToNewEntityFromDto(storeRequestDto, ward, storeType, imageName);
+        store.setOwner(user);
         Store savedStore = storeRepository.save(store);
         UserStoreRole userStoreRole = UserStoreRole.builder()
                 .role(adminRole)

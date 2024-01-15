@@ -12,6 +12,7 @@ import taplink.network.menu.api.models.StoreType;
 import taplink.network.menu.api.models.Ward;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,13 +40,25 @@ public class StoreConverter {
     public List<StoreResponseDto> convertToDtoFromEntity(List<Store> stores) {
         return stores.stream().map(store -> {
             StoreResponseDto storeResponseDto = objectMapperUtils.convertEntityAndDto(store, StoreResponseDto.class);
-            storeResponseDto.setStoreTypeId(store.getStoreType().getId());
-            storeResponseDto.setWardId(store.getWard().getId());
-            storeResponseDto.setDistrictId(store.getWard().getDistrict().getId());
-            storeResponseDto.setCityId(store.getWard().getDistrict().getId());
             if (Strings.isNotEmpty(store.getImage())) {
                 storeResponseDto.setImage(FileUtils.getImageUrl(store.getImage()));
             }
+            final StringBuilder addressBuilder = new StringBuilder(store.getAddress());
+            String address = Optional.ofNullable(store.getWard()).map(ward -> {
+                        addressBuilder.append(", ").append(ward.getName());
+                        return ward.getDistrict();
+                    }).
+                    map(district -> {
+                        addressBuilder.append(", ").append(district.getName());
+                        return district.getCity();
+                    })
+                    .map(city -> {
+                        addressBuilder.append(", ").append(city.getName());
+                        return addressBuilder.toString();
+                    })
+                    .orElse(addressBuilder.toString());
+            storeResponseDto.setAddress(address);
+            storeResponseDto.setPhone(store.getOwner().getPhone());
             return storeResponseDto;
         }).collect(Collectors.toList());
     }
