@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Category extends BaseEntity {
 
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "DESCRIPTION")
