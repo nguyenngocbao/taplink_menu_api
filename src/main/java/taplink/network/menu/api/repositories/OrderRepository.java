@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT o FROM Order o " +
-            "WHERE o.store.id = :storeId " +
+            "JOIN o.store s " +
+            "JOIN s.users u " +
+            "WHERE s.id = :storeId " +
+            "AND u.username = :userName " +
             "AND (:statusId IS NULL OR o.orderStatusId = :statusId) " +
             "AND (:fromDate IS NULL OR o.createdAt >= :fromDate) " +
             "AND (:toDate IS NULL OR o.createdAt <= :toDate)")
-    Page<Order> searchOrders(Long storeId, Integer statusId, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable);
-
+    Page<Order> searchOrders(Long storeId, Integer statusId, LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable, String userName);
+    
 }

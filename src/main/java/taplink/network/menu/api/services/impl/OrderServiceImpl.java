@@ -15,6 +15,7 @@ import taplink.network.menu.api.dtos.request.OrderRequestDto;
 import taplink.network.menu.api.dtos.response.OrderResponseDto;
 import taplink.network.menu.api.dtos.response.OrderStatusDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
+import taplink.network.menu.api.exceptions.AccessDeniedException;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Item;
 import taplink.network.menu.api.models.Order;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -43,9 +45,9 @@ public class OrderServiceImpl implements OrderService {
     private final ItemRepository itemRepository;
 
     @Override
-    public ResponseDto<OrderResponseDto> searchOrders(Long storeId, Integer statusId, LocalDateTime fromDate, LocalDateTime toDate, int pageNo, int pageSize, String sortBy, String sortDir) {
+    public ResponseDto<OrderResponseDto> searchOrders(Long storeId, Integer statusId, LocalDateTime fromDate, LocalDateTime toDate, int pageNo, int pageSize, String sortBy, String sortDir, String userName) {
         Pageable pageable = PageableUtils.getPageable(pageNo, pageSize, sortBy, sortDir);
-        Page<Order> orders = orderRepository.searchOrders(storeId, statusId, fromDate, toDate, pageable);
+        Page<Order> orders = orderRepository.searchOrders(storeId, statusId, fromDate, toDate, pageable, userName);
         List<Order> listOfOrders = orders.getContent();
         List<OrderResponseDto> content = orderConverter.convertToDtoFromEntity(listOfOrders);
         return new ResponseDto<>(orders, content);
@@ -54,15 +56,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseDto createOrder(OrderRequestDto orderRequestDto) {
         Store store = getStore(orderRequestDto);
-        Order order = orderConverter.convertToNewEntityFromDto(orderRequestDto, store);
+        Order order = new Order();
+        order.setStore(store);
+        order.setOrderStatusId(1); // created
 
         for (OrderItemRequestDto orderItemRequestDto : orderRequestDto.getOrderItemRequestDtos()) {
             Item item = getItem(orderItemRequestDto);
+            if (!Objects.equals(item.getCategory().getStore().getId(), store.getId())) {
+                throw new AccessDeniedException(String.format("Item with id '%s' is not belong to the menu with id '%s'", item.getId(), store.getId()));
+            }
             OrderItem orderItem = orderItemConverter.convertToNewEntityFromDto(orderItemRequestDto, item);
             order.addOrderItem(orderItem);
         }
         Order savedOrder = orderRepository.save(order);
-
+        // TODO: Send notification to FE via websocket
         return getOrderResponseDto(savedOrder);
     }
 
@@ -73,8 +80,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDto updateOrderStatus(Long id, OrderRequestDto orderRequestDto) {
-        return null;
+    public OrderResponseDto updateOrderStatus(Long id, Integer orderStatusId) {
+        Order order = getOrder(id);
+        if (Arrays.binarySearch(OrderStatus.getNextStatusesById(order.getOrderStatusId()), orderStatusId) < 0) {
+            throw new IllegalStateException(String.format("Can not update from order status '%s' to order status '%s' of order with id '%s'", OrderStatus.getOrderStatusNameById(order.getOrderStatusId()), OrderStatus.getOrderStatusNameById(orderStatusId), order.getId()));
+        }
+        order.setOrderStatusId(orderStatusId);
+        Order savedOrder = orderRepository.save(order);
+
+        if (OrderStatus.PAYMENT_PENDING.getId() == orderStatusId) {
+            // TODO: Send notification to FE via websocket
+        }
+        
+        return getOrderResponseDto(savedOrder);
     }
 
     @Override

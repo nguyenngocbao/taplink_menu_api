@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import taplink.network.menu.api.commons.constants.AppConstants;
 import taplink.network.menu.api.dtos.request.OrderRequestDto;
@@ -12,7 +14,6 @@ import taplink.network.menu.api.dtos.response.OrderStatusDto;
 import taplink.network.menu.api.dtos.response.ResponseDto;
 import taplink.network.menu.api.services.OrderService;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<?> searchOrders(
+            Authentication authentication,
             @RequestParam(value = "storeId") Long storeId,
             @RequestParam(value = "statusId", required = false) Integer statusId,
             @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
@@ -34,7 +36,8 @@ public class OrderController {
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
-        ResponseDto<OrderResponseDto> responseDTO = orderService.searchOrders(storeId, statusId, fromDate, toDate, pageNo, pageSize, sortBy, sortDir);
+        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        ResponseDto<OrderResponseDto> responseDTO = orderService.searchOrders(storeId, statusId, fromDate, toDate, pageNo, pageSize, sortBy, sortDir, username);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
@@ -57,8 +60,8 @@ public class OrderController {
     }
 
     @PutMapping(value = "/{orderId}")
-    public ResponseEntity<?> updateStatus(@PathVariable Long orderId, @RequestBody OrderRequestDto orderRequestDto) {
-        OrderResponseDto orderResponseDto = orderService.updateOrderStatus(orderId, orderRequestDto);
+    public ResponseEntity<?> updateStatus(@PathVariable Long orderId, @RequestBody Integer orderStatusId) {
+        OrderResponseDto orderResponseDto = orderService.updateOrderStatus(orderId, orderStatusId);
         return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
     }
 }
