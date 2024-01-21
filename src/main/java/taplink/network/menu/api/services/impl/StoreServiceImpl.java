@@ -51,9 +51,9 @@ public class StoreServiceImpl implements StoreService {
     private final ObjectMapperUtils objectMapperUtils;
 
     @Override
-    public ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, String username) {
+    public ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, Long userId) {
         Pageable pageable = PageableUtils.getPageable(pageNo, pageSize, sortBy, sortDir);
-        Page<Store> stores = storeRepository.searchStores(searchKey, pageable, username);
+        Page<Store> stores = storeRepository.searchStores(searchKey, pageable, userId);
         List<Store> listOfStores = stores.getContent();
         List<StoreResponseDto> content = storeConverter.convertToDtoFromEntity(listOfStores);
         return new ResponseDto<>(stores, content);
