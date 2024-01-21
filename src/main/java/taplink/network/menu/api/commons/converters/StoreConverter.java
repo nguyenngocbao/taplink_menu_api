@@ -59,6 +59,7 @@ public class StoreConverter {
                     .orElse(addressBuilder.toString());
             storeResponseDto.setAddress(address);
             storeResponseDto.setPhone(store.getOwner().getPhone());
+            storeResponseDto.setStoreTypeId(store.getStoreType().getId());
             return storeResponseDto;
         }).collect(Collectors.toList());
     }

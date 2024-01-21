@@ -12,6 +12,7 @@ public class StoreResponseDto {
     private String wifiPass;
     private Integer storeTemplateId;
     private Integer menuTemplateId;
+    private Long storeTypeId;
     private String phone;
     private String address;
 }
