@@ -37,7 +37,6 @@
     <springProfile name="stg,prod">
         <root level="INFO">
             <appender-ref ref="FILE" />
-            <appender-ref ref="CONSOLE_JSON"/>
         </root>
     </springProfile>
 
