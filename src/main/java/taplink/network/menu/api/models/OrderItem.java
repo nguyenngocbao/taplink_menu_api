@@ -30,4 +30,7 @@ public class OrderItem extends BaseEntity {
     @Column(name = "QUANTITIES")
     private Integer quantities;
 
+    @Column(name = "PRICE_INFO", columnDefinition = "json")
+    private String priceInfo;
+
 }

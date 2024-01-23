@@ -21,6 +21,7 @@ public class OrderItemConverter {
     public OrderItem convertToNewEntityFromDto(OrderItemRequestDto dto, Item item) {
         OrderItem orderItem = objectMapperUtils.convertEntityAndDto(dto, OrderItem.class);
         orderItem.setItem(item);
+        orderItem.setPriceInfo(item.getPriceInfo());
         return orderItem;
     }
 

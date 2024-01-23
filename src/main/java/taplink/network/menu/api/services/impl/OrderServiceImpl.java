@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import taplink.network.menu.api.commons.converters.OrderConverter;
 import taplink.network.menu.api.commons.converters.OrderItemConverter;
@@ -43,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
     private final ItemRepository itemRepository;
+    private SimpMessagingTemplate messagingTemplate;
 
     @Override
     public ResponseDto<OrderResponseDto> searchOrders(Long storeId, Integer statusId, LocalDateTime fromDate, LocalDateTime toDate, int pageNo, int pageSize, String sortBy, String sortDir, String userName) {
@@ -69,8 +71,9 @@ public class OrderServiceImpl implements OrderService {
             order.addOrderItem(orderItem);
         }
         Order savedOrder = orderRepository.save(order);
-        // TODO: Send notification to FE via websocket
-        return getOrderResponseDto(savedOrder);
+        OrderResponseDto orderResponseDto = getOrderResponseDto(savedOrder);
+        sendNotification(orderResponseDto);
+        return orderResponseDto;
     }
 
     @Override
@@ -88,11 +91,11 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatusId(orderStatusId);
         Order savedOrder = orderRepository.save(order);
 
+        OrderResponseDto orderResponseDto = getOrderResponseDto(savedOrder);
         if (OrderStatus.PAYMENT_PENDING.getId() == orderStatusId) {
-            // TODO: Send notification to FE via websocket
+            sendNotification(orderResponseDto);
         }
-        
-        return getOrderResponseDto(savedOrder);
+        return orderResponseDto;
     }
 
     @Override
@@ -117,4 +120,7 @@ public class OrderServiceImpl implements OrderService {
         return itemRepository.findById(orderItemRequestDto.getItemId()).orElseThrow(() -> new ResourceNotFoundException("Item", orderItemRequestDto.getItemId()));
     }
 
+    private void sendNotification(OrderResponseDto orderResponseDto) {
+        messagingTemplate.convertAndSend("/topic/orderNotification", orderResponseDto);
+    }
 }
