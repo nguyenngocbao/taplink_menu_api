@@ -57,6 +57,9 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserStoreRole> userStoreRoles = new HashSet<>();
 
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    private Set<Order> orders = new HashSet<>();
+
     public void addUser(User user) {
         user.getStores().add(this);
         this.users.add(user);
