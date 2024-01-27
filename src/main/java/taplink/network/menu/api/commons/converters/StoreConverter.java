@@ -39,27 +39,32 @@ public class StoreConverter {
 
     public List<StoreResponseDto> convertToDtoFromEntity(List<Store> stores) {
         return stores.stream().map(store -> {
-            StoreResponseDto storeResponseDto = objectMapperUtils.convertEntityAndDto(store, StoreResponseDto.class);
+            final StoreResponseDto storeResponseDto = objectMapperUtils.convertEntityAndDto(store, StoreResponseDto.class);
             if (Strings.isNotEmpty(store.getImage())) {
                 storeResponseDto.setImage(FileUtils.getImageUrl(store.getImage()));
             }
             final StringBuilder addressBuilder = new StringBuilder(store.getAddress());
-            String address = Optional.ofNullable(store.getWard()).map(ward -> {
+            String fullAddress = Optional.ofNullable(store.getWard())
+                    .map(ward -> {
+                        storeResponseDto.setWardId(ward.getId());
                         addressBuilder.append(", ").append(ward.getName());
                         return ward.getDistrict();
                     }).
                     map(district -> {
+                        storeResponseDto.setDistrictId(district.getId());
                         addressBuilder.append(", ").append(district.getName());
                         return district.getCity();
                     })
                     .map(city -> {
+                        storeResponseDto.setCityId(city.getId());
                         addressBuilder.append(", ").append(city.getName());
                         return addressBuilder.toString();
                     })
                     .orElse(addressBuilder.toString());
-            storeResponseDto.setAddress(address);
+            storeResponseDto.setFullAddress(fullAddress);
             storeResponseDto.setPhone(store.getOwner().getPhone());
             storeResponseDto.setStoreTypeId(store.getStoreType().getId());
+            storeResponseDto.setStoreOwnerId(store.getOwner().getId());
             return storeResponseDto;
         }).collect(Collectors.toList());
     }

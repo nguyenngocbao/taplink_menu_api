@@ -15,4 +15,9 @@ public class StoreResponseDto {
     private Long storeTypeId;
     private String phone;
     private String address;
+    private String fullAddress;
+    private Long wardId;
+    private Long cityId;
+    private Long districtId;
+    private Long storeOwnerId;
 }
