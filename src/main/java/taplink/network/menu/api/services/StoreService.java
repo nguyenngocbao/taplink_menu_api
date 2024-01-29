@@ -1,8 +1,11 @@
 package taplink.network.menu.api.services;
 
-import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
-import taplink.network.menu.api.dtos.response.*;
+import taplink.network.menu.api.dtos.response.MenuTemplateDto;
+import taplink.network.menu.api.dtos.response.ResponseDto;
+import taplink.network.menu.api.dtos.response.StoreResponseDto;
+import taplink.network.menu.api.dtos.response.StoreTemplateDto;
+import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
 import taplink.network.menu.api.models.Store;
 
 import java.util.List;
@@ -18,6 +21,8 @@ public interface StoreService {
     StoreResponseDto updateStore(Long id, StoreRequestDto storeRequestDto);
 
     void deleteStore(Long id);
+
+    void deleteImage(Long id);
 
     Store getStore(Long id);
 

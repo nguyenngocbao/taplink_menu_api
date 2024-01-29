@@ -17,5 +17,7 @@ public interface CategoryService {
 
     void deleteCategoryById(Long categoryId);
 
+    void deleteImage(Long categoryId);
+
     List<CategoryTemplateDto> getCategoryTemplates();
 }

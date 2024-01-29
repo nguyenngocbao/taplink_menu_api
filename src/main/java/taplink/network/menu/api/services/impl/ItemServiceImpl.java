@@ -3,11 +3,9 @@ package taplink.network.menu.api.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.commons.converters.ItemConverter;
 import taplink.network.menu.api.commons.enums.PriceType;
 import taplink.network.menu.api.commons.utils.PageableUtils;
@@ -26,7 +24,6 @@ import taplink.network.menu.api.services.ItemService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -84,11 +81,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void deleteItem(Long id) {
-        Item item = getItem(id);
-        item.setActive(false);
-        fileService.deleteFile(item.getImage());
-        item.setImage(null);
-        itemRepository.save(item);
+        deleteItemOrImage(id, true);
+    }
+
+    @Override
+    public void deleteImage(Long id) {
+        deleteItemOrImage(id, false);
     }
 
     @Override
@@ -101,6 +99,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<PriceTypeDto> getPriceTypes() {
         return Arrays.stream(PriceType.values()).map(priceType -> new PriceTypeDto(priceType.getId(), priceType.name(), priceType.getName())).toList();
+    }
+
+    private void deleteItemOrImage(Long id, boolean deleteItem) {
+        Item item = getItem(id);
+
+        if (deleteItem) {
+            item.setActive(false);
+        }
+
+        fileService.deleteFile(item.getImage());
+        item.setImage(null);
+        itemRepository.save(item);
     }
 
     private ItemResponseDto getItemResponseDto(Item savedItem) {

@@ -63,6 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
         String imageName = "";
         if (categoryRequestDto.getImage() != null) {
             imageName = fileService.checkAndUploadImage(categoryRequestDto.getImage());
+            fileService.deleteFile(category.getImage()); // delete old file after upload new image successfully
         }
         category.setImage(imageName);
         Category savedCategory = categoryRepository.save(category);
@@ -71,9 +72,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategoryById(Long categoryId) {
-        Category category = getCategory(categoryId);
-        category.setActive(false);
-        categoryRepository.save(category);
+        deleteCategoryOrImage(categoryId, true);
+    }
+
+    @Override
+    public void deleteImage(Long id) {
+        deleteCategoryOrImage(id, false);
     }
 
     @Override
@@ -91,6 +95,18 @@ public class CategoryServiceImpl implements CategoryService {
             categoryResponseDto.setImage(FileUtils.getImageUrl(category.getImage()));
         }
         return categoryResponseDto;
+    }
+
+    private void deleteCategoryOrImage(Long id, boolean deleteCategory) {
+        Category category = getCategory(id);
+
+        if (deleteCategory) {
+            category.setActive(false);
+        }
+
+        fileService.deleteFile(category.getImage());
+        category.setImage(null);
+        categoryRepository.save(category);
     }
 
 }

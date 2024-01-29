@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.commons.constants.AppConstants;
 import taplink.network.menu.api.commons.converters.StoreConverter;
 import taplink.network.menu.api.commons.enums.MenuTemplate;
@@ -15,23 +14,30 @@ import taplink.network.menu.api.commons.enums.StoreTemplate;
 import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
 import taplink.network.menu.api.commons.utils.PageableUtils;
 import taplink.network.menu.api.dtos.request.StoreRequestDto;
-import taplink.network.menu.api.dtos.response.*;
+import taplink.network.menu.api.dtos.response.MenuTemplateDto;
+import taplink.network.menu.api.dtos.response.ResponseDto;
+import taplink.network.menu.api.dtos.response.StoreResponseDto;
+import taplink.network.menu.api.dtos.response.StoreTemplateDto;
+import taplink.network.menu.api.dtos.response.StoreTypeResponseDto;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
+import taplink.network.menu.api.models.Role;
 import taplink.network.menu.api.models.Store;
 import taplink.network.menu.api.models.StoreType;
+import taplink.network.menu.api.models.User;
+import taplink.network.menu.api.models.UserStoreRole;
 import taplink.network.menu.api.models.Ward;
+import taplink.network.menu.api.repositories.RoleRepository;
 import taplink.network.menu.api.repositories.StoreRepository;
 import taplink.network.menu.api.repositories.StoreTypeRepository;
+import taplink.network.menu.api.repositories.UserRepository;
+import taplink.network.menu.api.repositories.UserStoreRoleRepository;
 import taplink.network.menu.api.repositories.WardRepository;
 import taplink.network.menu.api.services.FileService;
-import taplink.network.menu.api.models.*;
-import taplink.network.menu.api.repositories.*;
 import taplink.network.menu.api.services.StoreService;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -106,11 +112,12 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public void deleteStore(Long id) {
-        Store store = getStore(id);
-        store.setActive(false);
-        fileService.deleteFile(store.getImage());
-        store.setImage(null);
-        storeRepository.save(store);
+        deleteStoreOrImage(id, true);
+    }
+
+    @Override
+    public void deleteImage(Long id) {
+        deleteStoreOrImage(id, false);
     }
 
     @Override
@@ -133,6 +140,18 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<MenuTemplateDto> getMenuTemplates() {
         return Arrays.stream(MenuTemplate.values()).map(storeTemplate -> new MenuTemplateDto(storeTemplate.getId(), storeTemplate.name(), storeTemplate.getName())).toList();
+    }
+
+    private void deleteStoreOrImage(Long id, boolean deleteStore) {
+        Store store = getStore(id);
+
+        if (deleteStore) {
+            store.setActive(false);
+        }
+
+        fileService.deleteFile(store.getImage());
+        store.setImage(null);
+        storeRepository.save(store);
     }
 
     private StoreResponseDto getStoreResponseDto(Store savedStore) {

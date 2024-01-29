@@ -1,6 +1,5 @@
 package taplink.network.menu.api.services;
 
-import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.dtos.request.ItemRequestDto;
 import taplink.network.menu.api.dtos.response.ItemResponseDto;
 import taplink.network.menu.api.dtos.response.PriceTypeDto;
@@ -20,6 +19,8 @@ public interface ItemService {
     ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto);
 
     void deleteItem(Long id);
+
+    void deleteImage(Long id);
 
     Item getItem(Long id);
 
