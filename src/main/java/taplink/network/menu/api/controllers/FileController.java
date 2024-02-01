@@ -50,7 +50,7 @@ public class FileController {
         return new ResponseEntity<>(inputStreamResource, headers, HttpStatus.OK);
     }
 
-    @DeleteMapping("image/")
+    @DeleteMapping("image")
     public void deleteImage(@RequestBody DeleteImageRequestDto deleteImageRequestDto) {
         switch (deleteImageRequestDto.getType()) {
             case MENU_ITEM:
