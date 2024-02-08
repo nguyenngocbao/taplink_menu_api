@@ -76,6 +76,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/cities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/districts/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/signup").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/xt/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/xt/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
