@@ -48,8 +48,8 @@ public class XtService {
         request.setType("LIMIT");
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
-        request.setPrice("0.0018600");
-        request.setQuantity("80000");
+        request.setPrice("0.00178");
+        request.setQuantity("50000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -77,8 +77,8 @@ public class XtService {
         request.setType("LIMIT");
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
-        request.setPrice("0.0018600");
-        request.setQuantity("80000");
+        request.setPrice("0.00178");
+        request.setQuantity("50000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();

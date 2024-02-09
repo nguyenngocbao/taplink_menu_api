@@ -34,8 +34,8 @@ public class XtController {
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
-        account.setAppKey(accountProperties.getAppKey1());
-        account.setPrivateKey(accountProperties.getPrivateKey1());
+        account.setAppKey(accountProperties.getAppKey2());
+        account.setPrivateKey(accountProperties.getPrivateKey2());
 
         String result = XtHttpUtil.post(account,uri,mapper.writeValueAsString(request));
 
