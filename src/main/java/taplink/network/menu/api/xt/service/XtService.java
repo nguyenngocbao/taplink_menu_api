@@ -12,6 +12,7 @@ import taplink.network.menu.api.xt.model.XtAccount;
 import taplink.network.menu.api.xt.utils.XtAccountProperties;
 import taplink.network.menu.api.xt.utils.XtHttpUtil;
 
+import java.util.Random;
 import java.util.Stack;
 
 @Component
@@ -30,16 +31,19 @@ public class XtService {
     @Scheduled(cron = "0 */2 * * * ?")
     public void runCronJob() throws JsonProcessingException {
 
-        if (buy){
-            buy();
-            buy = false;
-        }else {
-            sell();
-            buy = true;
+        try {
+            double price = randomPrice();
+            sell(price);
+            Thread.sleep(1000);
+            buy(price);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+
     }
 
-    private void buy() throws JsonProcessingException {
+    private void buy(double price) throws JsonProcessingException {
         String uri = "/v4/order";
 
         SpotPostOrderRequest request = new SpotPostOrderRequest();
@@ -48,8 +52,8 @@ public class XtService {
         request.setType("LIMIT");
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
-        request.setPrice("0.00178");
-        request.setQuantity("50000");
+        request.setPrice(String.valueOf(price));
+        request.setQuantity("20000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -68,7 +72,7 @@ public class XtService {
 
     }
 
-    private void sell() throws JsonProcessingException {
+    private void sell(double price) throws JsonProcessingException {
         String uri = "/v4/order";
 
         SpotPostOrderRequest request = new SpotPostOrderRequest();
@@ -77,8 +81,8 @@ public class XtService {
         request.setType("LIMIT");
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
-        request.setPrice("0.00178");
-        request.setQuantity("50000");
+        request.setPrice(String.valueOf(price));
+        request.setQuantity("20000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -93,6 +97,18 @@ public class XtService {
 
         String result = XtHttpUtil.post(account,uri,mapper.writeValueAsString(request));
 
+    }
+
+    private double randomPrice(){
+        // Tạo một đối tượng Random
+        Random random = new Random();
+
+        // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
+        double lowerBound = 0.0017;
+        double upperBound = 0.00185;
+
+        double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
+        return Math.round(randomNumber * 100000.0) / 100000.0;
     }
 
 }

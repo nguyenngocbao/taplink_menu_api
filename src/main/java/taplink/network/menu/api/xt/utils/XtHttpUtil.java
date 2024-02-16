@@ -46,7 +46,15 @@ public class XtHttpUtil {
         config(account,httpRequest, time + "", signature);
         httpRequest.body(jsonBody);
         System.out.println("request===="+httpRequest.getMethod()+" "+httpRequest);
-        return httpRequest.execute().body();
+
+        String result =  httpRequest.execute().body();
+
+        System.out.println("result===="+ result);
+
+        return result;
+
+
+
     }
 
     private static String getOrDel(XtAccount account,String uri, Map<String, Object> queryMap, String method) {

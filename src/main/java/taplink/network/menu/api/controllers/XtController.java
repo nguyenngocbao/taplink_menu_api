@@ -60,6 +60,32 @@ public class XtController {
         return new ResponseEntity<>(XtHttpUtil.delete(account,uri, null), HttpStatus.OK);
     }
 
+    @GetMapping("/openOrder")
+    public ResponseEntity<?> openOrder() {
+        String uri = "/v4/open-order";
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", "retro_usdt");
+        param.put("bizType", "SPOT");
+
+        XtAccount account = new XtAccount();
+        account.setAppKey(accountProperties.getAppKey1());
+        account.setPrivateKey(accountProperties.getPrivateKey1());
+        return new ResponseEntity<>(XtHttpUtil.get(account,uri, param), HttpStatus.OK);
+    }
+
+    @GetMapping("/fullTicket")
+    public ResponseEntity<?> fullTicket() {
+        String uri = "/v4/public/ticker";
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", "retro_usdt");
+        //param.put("bizType", "SPOT");
+
+        XtAccount account = new XtAccount();
+        account.setAppKey(accountProperties.getAppKey1());
+        account.setPrivateKey(accountProperties.getPrivateKey1());
+        return new ResponseEntity<>(XtHttpUtil.get(account,uri, param), HttpStatus.OK);
+    }
+
     @GetMapping("/balance")
     public ResponseEntity<?> getBalance() {
         String uri = "/v4/balance";
