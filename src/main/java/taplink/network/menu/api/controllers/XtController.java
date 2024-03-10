@@ -2,6 +2,7 @@ package taplink.network.menu.api.controllers;
 
 import cn.hutool.json.JSON;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import taplink.network.menu.api.dtos.request.DeviceRequestDto;
 import taplink.network.menu.api.dtos.response.CategoryResponseDto;
+import taplink.network.menu.api.xt.model.OrderResponse;
 import taplink.network.menu.api.xt.model.SpotPostOrderRequest;
 import taplink.network.menu.api.xt.model.XtAccount;
 import taplink.network.menu.api.xt.utils.XtAccountProperties;
@@ -55,8 +57,8 @@ public class XtController {
     public ResponseEntity<?> deleteOrder(@PathVariable String id) {
         String uri = "/v4/order/"+id;
         XtAccount account = new XtAccount();
-        account.setAppKey(accountProperties.getAppKey1());
-        account.setPrivateKey(accountProperties.getPrivateKey1());
+        account.setAppKey(accountProperties.getAppKey2());
+        account.setPrivateKey(accountProperties.getPrivateKey2());
         return new ResponseEntity<>(XtHttpUtil.delete(account,uri, null), HttpStatus.OK);
     }
 
@@ -68,9 +70,28 @@ public class XtController {
         param.put("bizType", "SPOT");
 
         XtAccount account = new XtAccount();
+        account.setAppKey(accountProperties.getAppKey2());
+        account.setPrivateKey(accountProperties.getPrivateKey2());
+        return new ResponseEntity<>(XtHttpUtil.get(account,uri, param), HttpStatus.OK);
+    }
+
+    @GetMapping("/deleteAll")
+    public ResponseEntity<?> deleteAllOrder() throws JsonProcessingException {
+        String uri = "/v4/open-order";
+        Map<String, Object> param = new HashMap<>();
+        param.put("symbol", "retro_usdt");
+        param.put("bizType", "SPOT");
+
+        XtAccount account = new XtAccount();
         account.setAppKey(accountProperties.getAppKey1());
         account.setPrivateKey(accountProperties.getPrivateKey1());
-        return new ResponseEntity<>(XtHttpUtil.get(account,uri, param), HttpStatus.OK);
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<OrderResponse> responses =  objectMapper.readValue(XtHttpUtil.get(account,uri, param), new TypeReference<List<OrderResponse>>(){});
+        for (OrderResponse response : responses) {
+            String uri1 = "/v4/order/"+response.getOrderId();
+            XtHttpUtil.delete(account,uri1, null);
+        }
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 
     @GetMapping("/fullTicket")

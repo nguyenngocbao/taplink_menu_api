@@ -21,12 +21,17 @@ public class XtService {
     public static boolean buy = true;
     public static boolean accountBuy = true;
     public static boolean accountSell = true;
+    public static double  prevPrice = 0;
+    public static double  maxPrice = 0.00184;
+    public static double  minPrice = 0.0016;
+
 
     @Autowired
     private XtAccountProperties accountProperties;
 
     private Stack<String> account1 = new Stack<>();
     private Stack<String> account2 = new Stack<>();
+
     // Execute every 15 minutes
     @Scheduled(cron = "0 */2 * * * ?")
     public void runCronJob() throws JsonProcessingException {
@@ -43,6 +48,17 @@ public class XtService {
 
     }
 
+    private double getPrice(){
+        if (prevPrice == 0 || prevPrice >= maxPrice){
+            prevPrice = randomPrice();
+            return prevPrice;
+        }else{
+            prevPrice = prevPrice + 0.00003;
+            return prevPrice;
+
+        }
+    }
+
     private void buy(double price) throws JsonProcessingException {
         String uri = "/v4/order";
 
@@ -53,7 +69,7 @@ public class XtService {
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
         request.setPrice(String.valueOf(price));
-        request.setQuantity("20000");
+        request.setQuantity("30000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -82,7 +98,7 @@ public class XtService {
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
         request.setPrice(String.valueOf(price));
-        request.setQuantity("20000");
+        request.setQuantity("30000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -104,8 +120,8 @@ public class XtService {
         Random random = new Random();
 
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
-        double lowerBound = 0.0017;
-        double upperBound = 0.00185;
+        double lowerBound = 0.00185;
+        double upperBound = 0.00196;
 
         double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
         return Math.round(randomNumber * 100000.0) / 100000.0;
