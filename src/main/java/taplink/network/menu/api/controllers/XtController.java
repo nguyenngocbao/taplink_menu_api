@@ -1,6 +1,8 @@
 package taplink.network.menu.api.controllers;
 
 import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,8 +59,8 @@ public class XtController {
     public ResponseEntity<?> deleteOrder(@PathVariable String id) {
         String uri = "/v4/order/"+id;
         XtAccount account = new XtAccount();
-        account.setAppKey(accountProperties.getAppKey2());
-        account.setPrivateKey(accountProperties.getPrivateKey2());
+        account.setAppKey(accountProperties.getAppKey1());
+        account.setPrivateKey(accountProperties.getPrivateKey1());
         return new ResponseEntity<>(XtHttpUtil.delete(account,uri, null), HttpStatus.OK);
     }
 
@@ -85,11 +87,15 @@ public class XtController {
         XtAccount account = new XtAccount();
         account.setAppKey(accountProperties.getAppKey1());
         account.setPrivateKey(accountProperties.getPrivateKey1());
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<OrderResponse> responses =  objectMapper.readValue(XtHttpUtil.get(account,uri, param), new TypeReference<List<OrderResponse>>(){});
-        for (OrderResponse response : responses) {
-            String uri1 = "/v4/order/"+response.getOrderId();
-            XtHttpUtil.delete(account,uri1, null);
+        String result = XtHttpUtil.get(account,uri, param);
+        JSONObject jsonObject = new JSONObject(result);
+        JSONArray resultArray = jsonObject.getJSONArray("result");
+
+        for (int i = 0; i < resultArray.size(); i++) {
+            JSONObject resultObject = resultArray.getJSONObject(i);
+            String orderId = resultObject.getStr("orderId");
+            deleteOrder(orderId);
+
         }
         return new ResponseEntity<>("ok", HttpStatus.OK);
     }

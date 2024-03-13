@@ -38,9 +38,9 @@ public class XtService {
 
         try {
             double price = randomPrice();
-            sell(price);
+            //sell(price);
             Thread.sleep(1000);
-            buy(price);
+            //buy(price);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -115,13 +115,14 @@ public class XtService {
 
     }
 
+
     private double randomPrice(){
         // Tạo một đối tượng Random
         Random random = new Random();
 
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
-        double lowerBound = 0.00185;
-        double upperBound = 0.00196;
+        double lowerBound = 0.0018;
+        double upperBound = 0.0019;
 
         double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
         return Math.round(randomNumber * 100000.0) / 100000.0;
