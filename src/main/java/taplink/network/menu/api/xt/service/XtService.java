@@ -69,7 +69,7 @@ public class XtService {
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
         request.setPrice(String.valueOf(price));
-        request.setQuantity("10000");
+        request.setQuantity("30000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -98,7 +98,7 @@ public class XtService {
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
         request.setPrice(String.valueOf(price));
-        request.setQuantity("10000");
+        request.setQuantity("30000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -121,8 +121,8 @@ public class XtService {
         Random random = new Random();
 
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
-        double lowerBound = 0.0024;
-        double upperBound = 0.0025;
+        double lowerBound = 0.0020;
+        double upperBound = 0.00215;
 
         double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
         return Math.round(randomNumber * 100000.0) / 100000.0;
