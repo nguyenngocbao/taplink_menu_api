@@ -122,7 +122,7 @@ public class XtService {
 
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
         double lowerBound = 0.0020;
-        double upperBound = 0.00215;
+        double upperBound = 0.00208;
 
         double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
         return Math.round(randomNumber * 100000.0) / 100000.0;
