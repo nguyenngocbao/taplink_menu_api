@@ -121,8 +121,8 @@ public class XtService {
         Random random = new Random();
 
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
-        double lowerBound = 0.0020;
-        double upperBound = 0.00208;
+        double lowerBound = 0.00175;
+        double upperBound = 0.00183;
 
         double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
         return Math.round(randomNumber * 100000.0) / 100000.0;
