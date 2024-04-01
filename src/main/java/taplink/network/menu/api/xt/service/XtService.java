@@ -19,11 +19,12 @@ import java.util.Stack;
 public class XtService {
 
     public static boolean buy = true;
+    public static boolean stop = true;
     public static boolean accountBuy = true;
     public static boolean accountSell = true;
     public static double  prevPrice = 0;
-    public static double  maxPrice = 0.00184;
-    public static double  minPrice = 0.0016;
+    public static double  maxPrice = 0.0030;
+    public static double  minPrice = 0.0029;
 
 
     @Autowired
@@ -37,6 +38,9 @@ public class XtService {
     public void runCronJob() throws JsonProcessingException {
 
         try {
+            if (stop){
+                return;
+            }
             double price = randomPrice();
             sell(price);
             Thread.sleep(1000);
@@ -121,8 +125,8 @@ public class XtService {
         Random random = new Random();
 
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
-        double lowerBound = 0.0042;
-        double upperBound = 0.0045;
+        double lowerBound = minPrice;
+        double upperBound = maxPrice;
 
         double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
         return Math.round(randomNumber * 100000.0) / 100000.0;

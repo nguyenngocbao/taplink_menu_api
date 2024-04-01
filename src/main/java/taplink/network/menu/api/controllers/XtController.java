@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import taplink.network.menu.api.dtos.request.DeviceRequestDto;
 import taplink.network.menu.api.dtos.response.CategoryResponseDto;
 import taplink.network.menu.api.xt.model.OrderResponse;
+import taplink.network.menu.api.xt.model.SetupInfo;
 import taplink.network.menu.api.xt.model.SpotPostOrderRequest;
 import taplink.network.menu.api.xt.model.XtAccount;
+import taplink.network.menu.api.xt.service.XtService;
 import taplink.network.menu.api.xt.utils.XtAccountProperties;
 import taplink.network.menu.api.xt.utils.XtHttpUtil;
 
@@ -45,6 +47,23 @@ public class XtController {
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PostMapping("/setup")
+    public ResponseEntity<?> postSetup(@RequestBody() SetupInfo request) throws JsonProcessingException {
+
+        XtService.minPrice = request.getMinPrice();
+        XtService.maxPrice = request.getMaxPrice();
+
+        return new ResponseEntity<>(request, HttpStatus.OK);
+    }
+
+    @GetMapping("/stop")
+    public ResponseEntity<?> setStop() {
+
+        XtService.stop = !XtService.stop;
+        return new ResponseEntity<>(XtService.stop, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrder(@PathVariable String id) {
         String uri = "/v4/order";
