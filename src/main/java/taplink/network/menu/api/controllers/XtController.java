@@ -19,6 +19,7 @@ import taplink.network.menu.api.xt.model.SetupInfo;
 import taplink.network.menu.api.xt.model.SpotPostOrderRequest;
 import taplink.network.menu.api.xt.model.XtAccount;
 import taplink.network.menu.api.xt.service.XtService;
+import taplink.network.menu.api.xt.utils.MoralisAPIUtils;
 import taplink.network.menu.api.xt.utils.XtAccountProperties;
 import taplink.network.menu.api.xt.utils.XtHttpUtil;
 
@@ -33,6 +34,9 @@ public class XtController {
 
     @Autowired
     private XtAccountProperties accountProperties;
+
+    @Autowired
+    private XtService service;
 
     @PostMapping
     public ResponseEntity<?> postOrder(@RequestBody() SpotPostOrderRequest request) throws JsonProcessingException {
@@ -62,6 +66,11 @@ public class XtController {
 
         XtService.stop = !XtService.stop;
         return new ResponseEntity<>(XtService.stop, HttpStatus.OK);
+    }
+
+    @GetMapping("/getDexPrice")
+    public ResponseEntity<?> getDexPrice() throws Exception {
+        return new ResponseEntity<>(service.getGeckoPriceDex(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

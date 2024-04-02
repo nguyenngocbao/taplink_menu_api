@@ -1,14 +1,17 @@
 package taplink.network.menu.api.xt.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import taplink.network.menu.api.xt.model.PriceDexResponse;
 import taplink.network.menu.api.xt.model.SpotPostOrderRequest;
 import taplink.network.menu.api.xt.model.XtAccount;
+import taplink.network.menu.api.xt.utils.MoralisAPIUtils;
 import taplink.network.menu.api.xt.utils.XtAccountProperties;
 import taplink.network.menu.api.xt.utils.XtHttpUtil;
 
@@ -24,7 +27,7 @@ public class XtService {
     public static boolean accountSell = true;
     public static double  prevPrice = 0;
     public static double  maxPrice = 0.0030;
-    public static double  minPrice = 0.0029;
+    public static double  minPrice = 0.0025;
 
 
     @Autowired
@@ -127,9 +130,38 @@ public class XtService {
         // Đặt giới hạn dưới và giới hạn trên cho khoảng giá trị double
         double lowerBound = minPrice;
         double upperBound = maxPrice;
+        double dexPrice = 0;
+        try {
+            dexPrice = getGeckoPriceDex();
+        }catch (Exception e){
+            dexPrice = 0;
+        }
+        if (dexPrice < minPrice){
+            dexPrice = lowerBound + (upperBound - lowerBound) * random.nextDouble();
+        }
 
-        double randomNumber = lowerBound + (upperBound - lowerBound) * random.nextDouble();
-        return Math.round(randomNumber * 100000.0) / 100000.0;
+        return Math.round(dexPrice * 1000000.0) / 1000000.0;
     }
+
+    public PriceDexResponse getPriceDex() throws Exception {
+        String dexPrice = MoralisAPIUtils.getMoralisData();
+        ObjectMapper objectMapper = new ObjectMapper();
+        PriceDexResponse priceDexResponse = objectMapper.readValue(dexPrice,PriceDexResponse.class);
+
+        return priceDexResponse;
+    }
+
+    public double getGeckoPriceDex() throws Exception {
+
+        String dexPrice = MoralisAPIUtils.getFromGecko();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(dexPrice);
+        String priceUsdString = jsonNode.at("/data/attributes/price_usd").asText();
+        double priceUsdDouble = Double.parseDouble(priceUsdString);
+
+        return priceUsdDouble;
+    }
+
+
 
 }
