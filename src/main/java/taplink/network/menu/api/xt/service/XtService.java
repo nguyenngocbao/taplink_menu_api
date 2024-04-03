@@ -22,12 +22,12 @@ import java.util.Stack;
 public class XtService {
 
     public static boolean buy = true;
-    public static boolean stop = true;
+    public static boolean stop = false;
     public static boolean accountBuy = true;
-    public static boolean accountSell = true;
+    public static boolean accountSell = false;
     public static double  prevPrice = 0;
     public static double  maxPrice = 0.0030;
-    public static double  minPrice = 0.0025;
+    public static double  minPrice = 0.002;
 
 
     @Autowired
@@ -37,7 +37,7 @@ public class XtService {
     private Stack<String> account2 = new Stack<>();
 
     // Execute every 15 minutes
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void runCronJob() throws JsonProcessingException {
 
         try {
@@ -76,7 +76,7 @@ public class XtService {
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
         request.setPrice(String.valueOf(price));
-        request.setQuantity("30000");
+        request.setQuantity("10000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
@@ -105,7 +105,7 @@ public class XtService {
         request.setTimeInForce("GTC");
         request.setBizType("SPOT");
         request.setPrice(String.valueOf(price));
-        request.setQuantity("30000");
+        request.setQuantity("10000");
         ObjectMapper mapper = new ObjectMapper();
 
         XtAccount account = new XtAccount();
