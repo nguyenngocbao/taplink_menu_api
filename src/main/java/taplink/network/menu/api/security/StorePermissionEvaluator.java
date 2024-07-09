@@ -3,7 +3,6 @@ package taplink.network.menu.api.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Permission;
@@ -35,7 +34,7 @@ public class StorePermissionEvaluator implements PermissionEvaluator, CustomPerm
     }
 
     private boolean checkStorePermission(Authentication authentication, Object permission, Long storeId) {
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        String username = authentication.getPrincipal().toString();
         User user = userRepository.findByUsernameOrEmail(username, username).orElseThrow(() -> new ResourceNotFoundException("User could not be found for username or email" + username));
         List<UserStoreRole> userStoreRoles = user.getUserStoreRoles().stream().filter(userStoreRole -> userStoreRole.getStore().getId().equals(storeId)).toList();
         for (UserStoreRole userStoreRole : userStoreRoles) {

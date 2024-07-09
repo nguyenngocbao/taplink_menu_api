@@ -23,15 +23,14 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping
-    public ResponseEntity<?> searchStores(Authentication authentication,
+    public ResponseEntity<?> searchStores(@RequestParam Long userId,
                                           @RequestParam(value = "searchKey", defaultValue = AppConstants.EMPTY, required = false) String searchKey,
                                           @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
                                           @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                           @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
                                           @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        ResponseDto<StoreResponseDto> responseDTO = storeService.searchStores(searchKey, pageNo, pageSize, sortBy, sortDir, username);
+        ResponseDto<StoreResponseDto> responseDTO = storeService.searchStores(searchKey, pageNo, pageSize, sortBy, sortDir, userId);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
@@ -60,16 +59,16 @@ public class StoreController {
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createStore(Authentication authentication, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart("image") MultipartFile image) {
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, image, username);
+    public ResponseEntity<?> createStore(Authentication authentication, @ModelAttribute StoreRequestDto storeRequestDto) {
+        String username = authentication.getPrincipal().toString();
+        StoreResponseDto storeResponseDto = storeService.createStore(storeRequestDto, username);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasPermission(#id, 'STORE', 'STORE_EDIT')")
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
-    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @RequestPart("store") StoreRequestDto storeRequestDto, @RequestPart("image") MultipartFile image) {
-        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeRequestDto, image);
+    public ResponseEntity<?> updateStore(@PathVariable("id") Long id, @ModelAttribute StoreRequestDto storeRequestDto) {
+        StoreResponseDto storeResponseDto = storeService.updateStore(id, storeRequestDto);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
     }
 

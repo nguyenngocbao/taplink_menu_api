@@ -4,14 +4,13 @@ spring:
     username: taplink_menu_api
     password: Taplink@123
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
-        show-sql: true
+    show-sql: true
     hibernate:
       ddl-auto: update
-
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.MySQL8Dialect
+      format_sql: true
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
@@ -37,3 +36,7 @@ minio:
     secret-key: TpZ6Kn02ft1i5C7FiOPbQrzZopqzqUL8B1cJIVgD
   bucket-name: testmenu
 
+logging:
+  level:
+    org:
+      springframework.security: DEBUG

@@ -1,6 +1,5 @@
 package taplink.network.menu.api.services;
 
-import org.springframework.web.multipart.MultipartFile;
 import taplink.network.menu.api.dtos.request.ItemRequestDto;
 import taplink.network.menu.api.dtos.response.ItemResponseDto;
 import taplink.network.menu.api.dtos.response.PriceTypeDto;
@@ -13,13 +12,15 @@ public interface ItemService {
 
     ResponseDto<ItemResponseDto> searchItems(Long categoryId, String searchKey, int pageNo, int pageSize, String sortBy, String sortDir);
 
-    ItemResponseDto createItem(ItemRequestDto itemRequestDto, MultipartFile image);
+    ItemResponseDto createItem(ItemRequestDto itemRequestDto);
 
     ItemResponseDto findById(Long id);
 
-    ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto, MultipartFile image);
+    ItemResponseDto updateItem(Long id, ItemRequestDto itemRequestDto);
 
     void deleteItem(Long id);
+
+    void deleteImage(Long id);
 
     Item getItem(Long id);
 

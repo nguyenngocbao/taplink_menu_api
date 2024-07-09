@@ -46,15 +46,15 @@ public class CategoryController {
 
 
     @PreAuthorize("hasPermission(#categoryRequestDto.storeId, 'STORE', 'CATEGORY_CREATE')")
-    @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<?> createCategory(@ModelAttribute CategoryRequestDto categoryRequestDto) {
         CategoryResponseDto categoryResponseDto = categoryService.createCategory(categoryRequestDto);
         return new ResponseEntity<>(categoryResponseDto, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasPermission(#categoryId, 'CATEGORY', 'CATEGORY_EDIT')")
-    @PutMapping("/{categoryId}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequestDto categoryRequestDto) {
+    @PutMapping(value = "/{categoryId}", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> updateCategory(@PathVariable Long categoryId, @ModelAttribute CategoryRequestDto categoryRequestDto) {
         CategoryResponseDto categoryResponseDto = categoryService.updateCategory(categoryId, categoryRequestDto);
         return new ResponseEntity<>(categoryResponseDto, HttpStatus.OK);
     }

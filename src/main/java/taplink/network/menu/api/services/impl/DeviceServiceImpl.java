@@ -5,12 +5,15 @@ import org.springframework.stereotype.Service;
 import taplink.network.menu.api.commons.utils.ObjectMapperUtils;
 import taplink.network.menu.api.dtos.request.DeviceRequestDto;
 import taplink.network.menu.api.dtos.response.DeviceResponseDto;
+import taplink.network.menu.api.exceptions.DuplicateException;
 import taplink.network.menu.api.exceptions.ResourceNotFoundException;
 import taplink.network.menu.api.models.Device;
 import taplink.network.menu.api.models.Store;
 import taplink.network.menu.api.repositories.DeviceRepository;
 import taplink.network.menu.api.services.DeviceService;
 import taplink.network.menu.api.services.StoreService;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,11 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceResponseDto createDevice(DeviceRequestDto deviceRequestDto) {
+        Optional<Device> existingDevice = deviceRepository.findByUuid(deviceRequestDto.getUuid());
+        if (existingDevice.isPresent()) {
+            throw new DuplicateException(String.format("Device with the uuid '%s' already exists.", deviceRequestDto.getUuid()));
+        }
+
         Store store = storeService.getStore(deviceRequestDto.getStoreId());
         Device device = objectMapperUtils.convertEntityAndDto(deviceRequestDto, Device.class);
         device.setStore(store);

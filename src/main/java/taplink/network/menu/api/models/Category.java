@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Category extends BaseEntity {
 
-    @Column(name = "NAME", unique = true, nullable = false)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "DESCRIPTION")
@@ -28,6 +28,9 @@ public class Category extends BaseEntity {
 
     @Column(name = "ACTIVE", nullable = false)
     private Boolean active = Boolean.TRUE;
+
+    @Column(name = "IMAGE")
+    private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STORE_ID")

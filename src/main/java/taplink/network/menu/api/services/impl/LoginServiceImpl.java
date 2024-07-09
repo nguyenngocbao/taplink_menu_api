@@ -12,13 +12,14 @@ import taplink.network.menu.api.dtos.email.EmailTemplate;
 import taplink.network.menu.api.dtos.email.templates.OtpEmailTemplate;
 import taplink.network.menu.api.dtos.request.LoginRequestDto;
 import taplink.network.menu.api.dtos.request.OtpRequestDto;
-import taplink.network.menu.api.exceptions.ResourceNotFoundException;
+import taplink.network.menu.api.dtos.response.LoginResponseDto;
+import taplink.network.menu.api.dtos.response.UserResponseDto;
 import taplink.network.menu.api.models.User;
-import taplink.network.menu.api.repositories.UserRepository;
 import taplink.network.menu.api.security.OtpAuthenticationToken;
 import taplink.network.menu.api.services.LoginService;
 import taplink.network.menu.api.services.NotificationService;
 import taplink.network.menu.api.services.OtpService;
+import taplink.network.menu.api.services.UserService;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,14 +31,14 @@ public class LoginServiceImpl implements LoginService {
     private final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     private final OtpService otpService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final NotificationService notificationService;
 
     @Override
     public void sendOTP(OtpRequestDto otpRequestDto) {
         logger.info("Start generating and sending otp to email {}", otpRequestDto.email());
-        User user = userRepository.findByUsernameOrEmail(otpRequestDto.email(), otpRequestDto.email()).orElseThrow(() -> new ResourceNotFoundException("User could not be found for username or email" + otpRequestDto.email()));
+        User user = userService.findByUsernameOrEmail(otpRequestDto.email(), otpRequestDto.email());
         String otp = otpService.generateOTP(user.getEmail());
         List<EmailId> toEmailIds = Collections.singletonList(new EmailId(user.getFullName(), user.getEmail()));
         EmailTemplate emailTemplate = new OtpEmailTemplate(otp);
@@ -49,8 +50,10 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String login(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         authenticationManager.authenticate(new OtpAuthenticationToken(loginRequestDto.email(), loginRequestDto.password()));
-        return JwtUtils.generateToken(loginRequestDto.email());
+        String token = JwtUtils.generateToken(loginRequestDto.email());
+        UserResponseDto user = userService.getUserProfile(loginRequestDto.email());
+        return new LoginResponseDto(user, token);
     }
 }

@@ -1,6 +1,7 @@
 package taplink.network.menu.api.commons.converters;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import taplink.network.menu.api.commons.utils.FileUtils;
@@ -39,7 +40,7 @@ public class ItemConverter {
         return items.stream().map(item -> {
             ItemResponseDto itemResponseDto = objectMapperUtils.convertEntityAndDto(item, ItemResponseDto.class);
             itemResponseDto.setCategoryId(item.getCategory().getId());
-            if (item.getImage() != null) {
+            if (Strings.isNotEmpty(item.getImage())) {
                 itemResponseDto.setImage(FileUtils.getImageUrl(item.getImage()));
             }
             return itemResponseDto;
