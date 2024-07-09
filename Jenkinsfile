@@ -1,8 +1,8 @@
 pipeline {
     agent any
     tools {
-        maven 'Default'  // Sử dụng Maven mặc định
-        jdk 'Default'    // Sử dụng JDK mặc định
+        maven 'maven'  // Sử dụng Maven mặc định
+        jdk 'JDK 17'    // Sử dụng JDK mặc định
     }
     stages {
         stage('Checkout') {
