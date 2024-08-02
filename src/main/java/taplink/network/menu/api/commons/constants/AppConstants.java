@@ -9,6 +9,7 @@ public class AppConstants {
     public static final String EMPTY = "";
     public static final String SORT_BY_SORT_ORDER = "sortOrder";
     public static final String ADMIN_ROLE = "ADMIN";
+    public static final String STORE_OWNER_ROLE = "STORE_OWNER";
     public static final String DASH = "-";
     public static final String TEMP_FOLDER = "temp";
     public static final char DOT = '.';

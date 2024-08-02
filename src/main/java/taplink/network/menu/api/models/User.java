@@ -2,6 +2,7 @@ package taplink.network.menu.api.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "ONE_TIME_PASSWORD")
     private String oneTimePassword;
+
+    @Column(name = "IS_ADMIN")
+    @ColumnDefault("false")
+    private boolean isAdmin = false;
 
     @Column(name = "OTP_REQUESTED_TIME")
     private Date otpRequestedTime;

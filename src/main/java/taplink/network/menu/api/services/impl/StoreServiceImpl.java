@@ -65,11 +65,20 @@ public class StoreServiceImpl implements StoreService {
         return new ResponseDto<>(stores, content);
     }
 
+    @Override
+    public ResponseDto<StoreResponseDto> searchAllStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, Long userId) {
+        Pageable pageable = PageableUtils.getPageable(pageNo, pageSize, sortBy, sortDir);
+        Page<Store> stores = storeRepository.searchAllStores(searchKey, pageable);
+        List<Store> listOfStores = stores.getContent();
+        List<StoreResponseDto> content = storeConverter.convertToDtoFromEntity(listOfStores);
+        return new ResponseDto<>(stores, content);
+    }
+
     @Transactional
     @Override
     public StoreResponseDto createStore(StoreRequestDto storeRequestDto, String username) {
         User user = userRepository.findByUsernameOrEmail(username, username).orElseThrow(() -> new ResourceNotFoundException("User could not be found for username or email" + username));
-        Role adminRole = roleRepository.findByCode(AppConstants.ADMIN_ROLE).orElseThrow(() -> new ResourceNotFoundException("Role Admin could not be found"));
+        Role adminRole = roleRepository.findByCode(AppConstants.STORE_OWNER_ROLE).orElseThrow(() -> new ResourceNotFoundException("Role owner could not be found"));
         Ward ward = getWard(storeRequestDto);
         StoreType storeType = getStoreType(storeRequestDto);
         String imageName = "";
