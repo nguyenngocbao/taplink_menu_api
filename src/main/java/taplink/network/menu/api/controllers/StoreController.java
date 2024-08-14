@@ -35,14 +35,14 @@ public class StoreController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> searchAllStores(@RequestParam Long userId,
+    public ResponseEntity<?> searchAllStores(
                                           @RequestParam(value = "searchKey", defaultValue = AppConstants.EMPTY, required = false) String searchKey,
                                           @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
                                           @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
                                           @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
                                           @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
-        ResponseDto<StoreResponseDto> responseDTO = storeService.searchAllStores(searchKey, pageNo, pageSize, sortBy, sortDir, userId);
+        ResponseDto<StoreResponseDto> responseDTO = storeService.searchAllStores(searchKey, pageNo, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 

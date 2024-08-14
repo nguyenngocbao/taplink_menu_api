@@ -14,7 +14,7 @@ public interface StoreService {
 
     ResponseDto<StoreResponseDto> searchStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, Long userId);
 
-    ResponseDto<StoreResponseDto> searchAllStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, Long userId);
+    ResponseDto<StoreResponseDto> searchAllStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir);
 
     StoreResponseDto createStore(StoreRequestDto storeRequestDto, String username);
 

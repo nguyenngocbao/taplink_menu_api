@@ -66,7 +66,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ResponseDto<StoreResponseDto> searchAllStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir, Long userId) {
+    public ResponseDto<StoreResponseDto> searchAllStores(String searchKey, int pageNo, int pageSize, String sortBy, String sortDir) {
         Pageable pageable = PageableUtils.getPageable(pageNo, pageSize, sortBy, sortDir);
         Page<Store> stores = storeRepository.searchAllStores(searchKey, pageable);
         List<Store> listOfStores = stores.getContent();
